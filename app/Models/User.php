@@ -23,6 +23,8 @@ class User extends Authenticatable
         'email',
         'password',
         'is_validated',
+        'number',
+        'age',
         'license_path',
     ];
 

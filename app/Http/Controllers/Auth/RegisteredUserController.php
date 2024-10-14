@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class RegisteredUserController extends Controller
 {
@@ -35,6 +36,8 @@ class RegisteredUserController extends Controller
             'username' => 'required|string|max:40|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'number' => 'required|string|max:11|unique:users',
+            'birthdate' => 'required|date|before:today',
             'license_pdf' => 'required|mimes:pdf|max:2048',  // Validação para o PDF
         ]);
 
@@ -44,12 +47,17 @@ class RegisteredUserController extends Controller
         // Salvando o arquivo com nome customizado
         $path_pdf = 'storage/app/private/' . $request->username . '/' . $request->username . '_cnh.pdf';
 
+        $birthdate = Carbon::parse($request->birthdate);
+        $age = $birthdate->age;
+
         // Criação do usuário
         $user = User::create([
             'name' => $request->name,
             'username' => $username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'number' => $request->number,
+            'age' => $age,
             'license_path' => $path_pdf,  // Salvando o caminho no banco de dados
             'is_validated' => false,  // Novo usuário não validado por padrão
         ]);
