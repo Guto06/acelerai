@@ -34,8 +34,9 @@ RUN docker-php-ext-install gettext intl pdo_pgsql
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd
 
-COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
+# Install Node.js
+RUN apt-get install -y curl \
+&& curl -sL https://deb.nodesource.com/setup_18.x | bash - \
+&& apt-get install -y nodejs
 
-# Permissões para storage e bootstrap/cache
-RUN chown -R www-data:www-data /var/www/html/storage
-RUN chown -R www-data:www-data /var/www/html/bootstrap/cache
+COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
