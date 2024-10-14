@@ -11,5 +11,5 @@ chmod -R 775 /var/www/html/storage
 composer update
 npm i
 php artisan migrate
-php artisan serve
+npm run build
 ```
