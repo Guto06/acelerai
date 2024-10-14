@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class RegisteredUserController extends Controller
 {
@@ -30,15 +31,27 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:40|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'license_pdf' => 'required|mimes:pdf|max:2048',  // Validação para o PDF
         ]);
 
+        // Criação da pasta com base no nome do usuário
+        $username = $request->username;
+        Storage::put($request->username . '/' . $request->username . '_cnh.pdf', $request->license_pdf->get());
+        // Salvando o arquivo com nome customizado
+        $path_pdf = 'storage/app/private/' . $request->username . '/' . $request->username . '_cnh.pdf';
+
+        // Criação do usuário
         $user = User::create([
             'name' => $request->name,
+            'username' => $username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'license_path' => $path_pdf,  // Salvando o caminho no banco de dados
+            'is_validated' => false,  // Novo usuário não validado por padrão
         ]);
 
         event(new Registered($user));
