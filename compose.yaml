@@ -1,7 +1,7 @@
 
 services:
   laravel-docker:
-    container_name: laravel-docker
+    container_name: laravel-acelerai
     build: .
     volumes:
       - .:/var/www/html
@@ -10,7 +10,7 @@ services:
 
   postgres:
     image: postgres:latest
-    container_name: postgres-container
+    container_name: postgres-acelerai
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
