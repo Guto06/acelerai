@@ -28,6 +28,9 @@ class VehicleController extends Controller
 
     public function dashboard(){
         $user = Auth::user();
+        if($user->is_administrator){
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
         $vehicles = Vehicle::where('user_id', $user->id)->get();
         return view('userDashboard',['vehicles' => $vehicles]);
     }
@@ -36,8 +39,8 @@ class VehicleController extends Controller
 
 
         $user = Auth::user();
-        if($user == NULL){
-            return redirect('/');
+        if($user == NULL || $user->is_administrator){
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
 
         $request->validate([
@@ -90,8 +93,8 @@ class VehicleController extends Controller
     public function update(Request $request){
 
         $user = Auth::user();
-        if($user == NULL){
-            return redirect('/');
+        if($user == NULL || $user->is_administrator){
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
         $request->validate([
             'model' => ['required', 'string', 'max:30'],
@@ -103,7 +106,7 @@ class VehicleController extends Controller
 
         $vehicle = Vehicle::findOrFail($request->id);
         if($vehicle->user_id != $user->id){
-            return redirect('/');
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
         $vehicle ->category = $this->generateCategory($request->power);
         $vehicle->update($request->all());
@@ -114,12 +117,12 @@ class VehicleController extends Controller
     public function destroy($id){
 
         $user = Auth::user();
-        if($user == NULL){
-            return redirect('/');
+        if($user == NULL || $user->is_administrator){
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
         $vehicle = Vehicle::findOrFail($id);
         if($vehicle->user_id != $user->id){
-            return redirect('/');
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
         $vehicle->delete();
 

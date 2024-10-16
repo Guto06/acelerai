@@ -17,7 +17,7 @@ use Carbon\Carbon;
 class RegisteredUserController extends Controller
 {
     /**
-     * Display the registration view.
+     * Display the registration view.'
      */
     public function create(): View
     {
@@ -60,8 +60,6 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        return redirect('/')->with('msg', 'Usuário criado com sucesso. Aguarde aprovação.');
     }
 }

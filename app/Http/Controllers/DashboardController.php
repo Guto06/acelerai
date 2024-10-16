@@ -6,11 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
+        if(!$user->is_administrator){
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
         // Busca apenas os usuários que não foram validados
         $users = User::where('is_validated', false)->get();
         return view('dashboard', compact('users'));
@@ -18,6 +23,10 @@ class DashboardController extends Controller
     // Função para validar o usuário
     public function validateUser($id)
     {
+        $user = Auth::user();
+        if(!$user->is_administrator){
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
         // Busca o usuário pelo ID
         $user = User::find($id);
 
@@ -35,6 +44,10 @@ class DashboardController extends Controller
 
     public function documentUser($id)
     {
+        $user = Auth::user();
+        if(!$user->is_administrator){
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
         // Busca o usuário pelo ID
         $user = User::find($id);
 

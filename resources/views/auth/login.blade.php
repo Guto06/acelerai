@@ -7,6 +7,23 @@
             <h2 class="text-3xl font-bold" style="color: #FF9800;">Log In</h2>
             <p class="mt-2 text-sm" style="color: #FF9800;">Sign in to access your account</p>
         </div>
+        <div class="container-fluid">
+            <div class="row">
+                @if(session('msg'))
+                    <div class="w-full max-w-lg mx-auto">
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative shadow-md animate-fade-in" role="alert">
+                            <span class="block sm:inline">{{ session('msg') }}</span>
+                            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" onclick="this.parentElement.parentElement.classList.add('hidden')">
+                                    <title>Fechar</title>
+                                    <path d="M14.348 14.849a1 1 0 01-1.414 0L10 11.914l-2.935 2.935a1 1 0 01-1.414-1.414L8.586 10 5.651 7.065a1 1 0 111.414-1.414L10 8.586l2.935-2.935a1 1 0 111.414 1.414L11.414 10l2.935 2.935a1 1 0 010 1.414z"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </div>
         <form method="POST" action="{{ route('login') }}" class="space-y-6">
             @csrf
             <!-- Email Address -->

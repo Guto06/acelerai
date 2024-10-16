@@ -24,10 +24,24 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Autentica o usuário
         $request->authenticate();
-
+    
+        // Verifica se o usuário é válido antes de regenerar a sessão
+        if (!Auth::user()->is_validated) {
+            Auth::logout(); // Desloga o usuário se ele não for válido
+            return redirect('/login')->with('msg', 'Sua conta ainda não foi validada. Por favor, aguarde a validação.');
+        }
+    
+        // Regenera o token da sessão após a validação
         $request->session()->regenerate();
-
+    
+        // Verifica se o usuário não é administrador
+        if (!Auth::user()->is_administrator) {
+            return redirect('/veiculos/dashboard');
+        }
+    
+        // Redireciona para o painel do administrador
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
