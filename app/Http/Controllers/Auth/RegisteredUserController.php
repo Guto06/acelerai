@@ -47,9 +47,6 @@ class RegisteredUserController extends Controller
         // Salvando o arquivo com nome customizado
         $path_pdf = 'app/private/' . $request->username . '/' . $request->username . '_cnh.pdf';
 
-        $birthdate = Carbon::parse($request->birthdate);
-        $age = $birthdate->age;
-
         // Criação do usuário
         $user = User::create([
             'name' => $request->name,
@@ -57,9 +54,8 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'number' => $request->number,
-            'age' => $age,
+            'age' => $request->birthdate,
             'license_path' => $path_pdf,  // Salvando o caminho no banco de dados
-            'is_validated' => false,  // Novo usuário não validado por padrão
         ]);
 
         event(new Registered($user));

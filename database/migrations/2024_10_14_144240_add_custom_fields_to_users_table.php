@@ -14,13 +14,14 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_validated')->default(false);  // Validação do piloto
             $table->string('license_path');    // Licença de motorista
+            $table->boolean('is_administrator')->default(false);  // Administrador
         });
     }
     
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['is_validated', 'license_path']);
+            $table->dropColumn(['is_validated', 'license_path', 'is_administrator']);
         });
     }
     

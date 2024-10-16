@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/user/{id}/destroy', [ProfileController::class, 'destroyAdm'])->name('user.destroy');
     Route::get('/veiculos/novo',[VehicleController::class,'create']);
     Route::post('/veiculos/novo/criar',[VehicleController::class,'store']);
     Route::get('/veiculos/show/{id}',[VehicleController::class,'show']);

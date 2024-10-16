@@ -36,7 +36,7 @@
                             <p class="text-sm ">Email: {{ $user->email }}</p>
                             <p class="text-sm ">Nome de usuário: {{ $user->username }}</p>
                             <p class="text-sm ">Número para contato: {{ $user->number }}</p>
-                            <p class="text-sm ">Idade: {{ $user->age }}</p>
+                            <p class="text-sm ">Idade: {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $user->age)->age }}</p>
                         </div>
 
                         <!-- Action buttons on the right -->
@@ -55,6 +55,14 @@
                                 @csrf
                                 <button type="submit" class="bg-green-500 hover:bg-green-700 text-black font-bold py-2 px-4 rounded">
                                     Validar Usuário
+                                </button>
+                            </form>
+<!-- Delete User button -->
+                            <form action="{{ route('user.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este usuário?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                    Excluir Usuário
                                 </button>
                             </form>
                         </div>
