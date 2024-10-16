@@ -18,6 +18,10 @@ Route::post('/user/{id}/validate', [DashboardController::class, 'validateUser'])
     ->middleware(['auth', 'verified'])
     ->name('user.validate');
 
+Route::post('/user/{id}/document', [DashboardController::class, 'documentUser'])
+    ->middleware(['auth', 'verified'])
+    ->name('user.document');
+
 
 
 Route::middleware('auth')->group(function () {

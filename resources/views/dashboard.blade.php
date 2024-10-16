@@ -42,10 +42,13 @@
                         <!-- Action buttons on the right -->
                         <div class="flex items-center space-x-4">
                             <!-- Download CNH button -->
-                            <a href="{{ asset($user->license_path) }}" class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded">
-                                Baixar CNH
-                            </a>
-
+                            <form action="{{ route('user.document', $user->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded">
+                                    Visualizar CNH
+                                </button>
+                            </form>
+                            
                             <!-- Validate user button -->
                             <form action="{{ route('user.validate', $user->id) }}" method="POST">
                                 @csrf
