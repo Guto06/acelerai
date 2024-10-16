@@ -12,7 +12,7 @@
 
                 <!-- Navigation Links -->
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-                <<div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex "> 
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex "> 
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" > 
                     {{ __('Validar Usuários') }}
                 </x-nav-link>
