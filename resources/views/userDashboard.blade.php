@@ -1,8 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
+    <h2 class="font-semibold text-xl leading-tight shadow-white" style="color: #FF9800;">
+        {{ __('Registro de veículos') }}
+    </h2>
     </x-slot>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 
@@ -26,13 +26,13 @@
     <div class="py-12">
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <a href="/veiculos/novo " class="bg-green-500  text-white font-bold py-2 px-4 rounded">
+            <a href="/veiculos/novo " class="bg-green-500  text-white font-bold py-2 px-4 rounded" >
                 Adicionar Veículo
             </a>
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 mt-4" >
+            <div class="bg-gray-300 overflow-hidden shadow-sm sm:rounded-lg p-6 mt-4"style="border: 5px solid #FF9800;" >
                 @if (count($vehicles) > 0)
                     @foreach ($vehicles as $vehicle)
-                        <div class="flex justify-between items-center border-b border-gray-200 py-4">
+                        <div class="flex justify-between items-center border-b border-black py-4">
                             <span>{{ $vehicle->model }}</span>
                             <div class="flex space-x-2">
                                 <!-- Botão Exibir -->
