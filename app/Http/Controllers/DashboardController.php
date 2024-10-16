@@ -9,10 +9,10 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
     public function index() {
-        $users = User::all();
+        // Busca apenas os usuários que não foram validados
+        $users = User::where('is_validated', false)->get();
         return view('dashboard', compact('users'));
     }
-
     // Função para validar o usuário
     public function validateUser($id) {
         // Busca o usuário pelo ID
@@ -20,13 +20,13 @@ class DashboardController extends Controller
 
         // Verifica se o usuário foi encontrado
         if (!$user) {
-            return redirect()->back()->with('error', 'Usuário não encontrado');
+            return redirect('/dashboard')->with('msg', "Usuário não encontrado");
         }
 
         // Atualiza o campo `is_validated` para true (usuário validado)
         $user->is_validated = true;
         $user->save();
 
-        return redirect()->back()->with('success', 'Usuário validado com sucesso!');
+        return redirect('/dashboard')->with('msg', "{$user->name} foi validado com sucesso");
     }
 }
