@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VehicleController;
@@ -8,11 +8,16 @@ Route::get('/', function () {
 });
 
 
+// Rota para o dashboard, que agora usa o DashboardController para exibir os usuários
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
+// Rota para validar o usuário
+Route::post('/user/{id}/validate', [DashboardController::class, 'validateUser'])
+    ->middleware(['auth', 'verified'])
+    ->name('user.validate');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 
 Route::middleware('auth')->group(function () {
