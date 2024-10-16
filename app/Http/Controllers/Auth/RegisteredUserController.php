@@ -45,7 +45,7 @@ class RegisteredUserController extends Controller
         $username = $request->username;
         Storage::put($request->username . '/' . $request->username . '_cnh.pdf', $request->license_pdf->get());
         // Salvando o arquivo com nome customizado
-        $path_pdf = 'storage/app/private/' . $request->username . '/' . $request->username . '_cnh.pdf';
+        $path_pdf = 'app/private/' . $request->username . '/' . $request->username . '_cnh.pdf';
 
         $birthdate = Carbon::parse($request->birthdate);
         $age = $birthdate->age;
