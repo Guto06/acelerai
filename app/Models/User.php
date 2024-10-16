@@ -26,6 +26,7 @@ class User extends Authenticatable
         'number',
         'age',
         'license_path',
+        'is_administrator',
     ];
 
 
