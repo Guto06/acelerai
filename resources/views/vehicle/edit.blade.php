@@ -10,9 +10,9 @@
                 <x-input-error :messages="$errors->get('model')" class="mt-2" />
             </div>
             <!-- Email Address -->
-            <div class="mt-4">
+            <div>
                 <x-input-label for="brand" :value="__('Marca')" style="color: #FF9800;" />
-                <x-text-input id="brand" class="block mt-1 w-full rounded-md shadow-sm" type="brand" name="brand" value="{{ $vehicle->brand }}" required autocomplete="username" style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
+                <x-text-input id="brand" class="block mt-1 w-full rounded-md shadow-sm" type="text" name="brand"  value="{{ $vehicle->brand }}" required autofocus autocomplete="brand" style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
                 <x-input-error :messages="$errors->get('brand')" class="mt-2" />
             </div>
             <div class="mt-4">
