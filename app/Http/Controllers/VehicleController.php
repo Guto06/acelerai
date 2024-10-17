@@ -26,15 +26,6 @@ class VehicleController extends Controller
 
     }
 
-    public function dashboard(){
-        $user = Auth::user();
-        if($user->is_administrator){
-            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
-        }
-        $vehicles = Vehicle::where('user_id', $user->id)->get();
-        return view('userDashboard',['vehicles' => $vehicles]);
-    }
-
     public function store(Request $request){
 
 

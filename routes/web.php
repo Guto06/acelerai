@@ -3,13 +3,15 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VehicleController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
 
 // Rota para o dashboard, que agora usa o DashboardController para exibir os usuários
-Route::get('/dashboard', [DashboardController::class, 'index'])
+Route::get('/dashboard', [DashboardController::class, 'dashboardAdministrator'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
@@ -35,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/veiculos/delete/{id}',[VehicleController::class,'destroy']);
     Route::put('/veiculos/update/{id}',[VehicleController::class,'update']);
     Route::get('/veiculos/edit/{id}',[VehicleController::class,'edit']);
-    Route::get('/veiculos/dashboard',[VehicleController::class,'dashboard']);
+    Route::get('/dashboard/user',[DashboardController::class,'dashboardUser']);
 
 });
 

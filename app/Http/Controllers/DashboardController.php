@@ -7,10 +7,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Vehicle;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function dashboardAdministrator()
     {
         $user = Auth::user();
         if(!$user->is_administrator){
@@ -20,6 +21,16 @@ class DashboardController extends Controller
         $users = User::where('is_validated', false)->get();
         return view('dashboard', compact('users'));
     }
+
+    public function dashboardUser(){
+        $user = Auth::user();
+        if($user->is_administrator){
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
+        $vehicles = Vehicle::where('user_id', $user->id)->get();
+        return view('userDashboard',['vehicles' => $vehicles]);
+    }
+
     // Função para validar o usuário
     public function validateUser($id)
     {
