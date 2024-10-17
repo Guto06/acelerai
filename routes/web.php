@@ -25,8 +25,10 @@ Route::post('/user/{id}/document', [DashboardController::class, 'documentUser'])
     ->name('user.document');
 
 
+Route::get('/profile/{username}', [ProfileController::class, 'showProfile'])->name('profile');
 
 Route::middleware('auth')->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Models\User;
+use App\Models\Vehicle;
 
 
 class ProfileController extends Controller
@@ -22,6 +23,15 @@ class ProfileController extends Controller
             'user' => $request->user(),
         ]);
     }
+
+    public function showProfile($username)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+        $vehicles = Vehicle::where('user_id', $user->id)->get();
+
+        return view('profile.profile', compact('user', 'vehicles'));
+    }
+
 
     /**
      * Update the user's profile information.
@@ -61,17 +71,17 @@ class ProfileController extends Controller
     }
 
     public function destroyAdm(Request $request, $id): RedirectResponse
-{
-    // Verifica se o usuário logado é um administrador
-    if (Auth::user()->is_administrator) {
-        $user = User::findOrFail($id); // Busca o usuário pelo ID
-    
-        $user->delete(); // Exclui o usuário
+    {
+        // Verifica se o usuário logado é um administrador
+        if (Auth::user()->is_administrator) {
+            $user = User::findOrFail($id); // Busca o usuário pelo ID
 
-        return back()->with('msg', 'Usuário excluído com sucesso.');
+            $user->delete(); // Exclui o usuário
+
+            return back()->with('msg', 'Usuário excluído com sucesso.');
+        }
+
+        // Se o usuário não for administrador, redireciona com mensagem de erro
+        return back()->with('msg', 'Ação não permitida.');
     }
-    
-    // Se o usuário não for administrador, redireciona com mensagem de erro
-    return back()->with('msg', 'Ação não permitida.');
-}
 }
