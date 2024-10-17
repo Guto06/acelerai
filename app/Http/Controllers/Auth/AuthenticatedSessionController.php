@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
     
         // Verifica se o usuário não é administrador
         if (!Auth::user()->is_administrator) {
-            return redirect('/veiculos/dashboard');
+            return redirect('/dashboard/user');
         }
     
         // Redireciona para o painel do administrador

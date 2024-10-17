@@ -39,7 +39,7 @@
             <nav class="space-x-4 font-semibold mr-11 mb-12">
                 @auth
                     <a
-                        href="{{ url('/dashboard') }}"
+                        href="{{ Auth::user()->is_administrator ? url('/dashboard') : url('/dashboard/user') }}"
                         class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                     >
                         Dashboard

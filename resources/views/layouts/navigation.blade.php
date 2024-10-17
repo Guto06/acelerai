@@ -13,13 +13,17 @@
                 <!-- Navigation Links -->
                 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex "> 
-                <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" > 
-                    {{ __('Validar Usuários') }}
-                </x-nav-link>
-</div>
-
+                    @if (Auth::user()->is_administrator)
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" > 
+                            {{ __('Validar Usuários') }}
+                        </x-nav-link>
+                    @else
+                        <x-nav-link :href="route('dashboard.user')" :active="request()->routeIs('dashboard.user')" > 
+                            {{ __('Veículos') }}
+                        </x-nav-link>
+                    @endif
+                </div>
             </div>
-
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">

@@ -52,7 +52,7 @@ class VehicleController extends Controller
         $vehicle ->category = $this->generateCategory($request->power);
 
         $vehicle->save();
-        return redirect('/veiculos/dashboard')->with('msg', "Veículo {$vehicle->model} adicionado com sucesso");
+        return redirect('/dashboard/user')->with('msg', "Veículo {$vehicle->model} adicionado com sucesso");
 
     }
 
@@ -102,7 +102,7 @@ class VehicleController extends Controller
         $vehicle ->category = $this->generateCategory($request->power);
         $vehicle->update($request->all());
 
-        return redirect('/veiculos/dashboard')->with('msg','Veículo editado com sucesso');;
+        return redirect('/dashboard/user')->with('msg','Veículo editado com sucesso');;
     }
 
     public function destroy($id){
@@ -117,7 +117,7 @@ class VehicleController extends Controller
         }
         $vehicle->delete();
 
-        return redirect('/veiculos/dashboard')->with('msg','Veículo retirado com sucesso');
+        return redirect('/dashboard/user')->with('msg','Veículo retirado com sucesso');
 
     }
 }

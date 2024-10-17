@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/veiculos/delete/{id}',[VehicleController::class,'destroy']);
     Route::put('/veiculos/update/{id}',[VehicleController::class,'update']);
     Route::get('/veiculos/edit/{id}',[VehicleController::class,'edit']);
-    Route::get('/dashboard/user',[DashboardController::class,'dashboardUser']);
+    Route::get('/dashboard/user',[DashboardController::class,'dashboardUser'])->name('dashboard.user');
 
 });
 
