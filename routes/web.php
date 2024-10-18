@@ -3,6 +3,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\RaceController; // Adicione esta linha
+
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
@@ -14,6 +16,9 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'dashboardAdministrator'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+//rota de criação de corridas
+Route::resource('races', RaceController::class);
 
 // Rota para validar o usuário
 Route::post('/user/{id}/validate', [DashboardController::class, 'validateUser'])
