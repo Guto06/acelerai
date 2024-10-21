@@ -9,12 +9,14 @@ class Race extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'category', 'max_vehicles', 'date'];
+    protected $fillable = ['name', 'category', 'max_vehicles', 'date', 'start_location', 'start_latitude', 'start_longitude', 'end_location', 'end_latitude', 'end_longitude'];
+
 
     public function vehicles()
     {
         return $this->belongsToMany(Vehicle::class)
-                    ->withPivot('position', 'time') // Adiciona os campos da tabela intermediária
+                    ->withPivot('position', 'time')
                     ->withTimestamps();
     }
 }
+

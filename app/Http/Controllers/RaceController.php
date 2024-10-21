@@ -28,11 +28,18 @@ class RaceController extends Controller
             'category' => 'required|string|max:255',
             'max_vehicles' => 'required|integer',
             'date' => 'required|date',
+            'start_location' => 'required|string|max:255',
+            'start_latitude' => 'required|numeric',   // Validação da latitude de largada
+            'start_longitude' => 'required|numeric',  // Validação da longitude de largada
+            'end_location' => 'required|string|max:255',
+            'end_latitude' => 'required|numeric',     // Validação da latitude de chegada
+            'end_longitude' => 'required|numeric',    // Validação da longitude de chegada
         ]);
-
-        Race::create($request->all()); // Cria a nova corrida com os dados recebidos
-        return redirect()->route('races.index')->with('success', 'Corrida criada com sucesso!'); // Redireciona para a lista de corridas
+    
+        Race::create($request->all());
+        return redirect()->route('races.index')->with('success', 'Corrida criada com sucesso!');
     }
+    
 
     // Exibir uma corrida específica
     public function show(Race $race)
@@ -54,6 +61,12 @@ class RaceController extends Controller
             'category' => 'required|string|max:255',
             'max_vehicles' => 'required|integer',
             'date' => 'required|date',
+            'start_location' => 'required|string|max:255',
+            'start_latitude' => 'required|numeric',   // Validação da latitude de largada
+            'start_longitude' => 'required|numeric',  // Validação da longitude de largada
+            'end_location' => 'required|string|max:255',
+            'end_latitude' => 'required|numeric',     // Validação da latitude de chegada
+            'end_longitude' => 'required|numeric',    // Validação da longitude de chegada
         ]);
 
         $race->update($request->all()); // Atualiza a corrida com os dados recebidos
