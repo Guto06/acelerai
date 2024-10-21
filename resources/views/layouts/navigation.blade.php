@@ -15,11 +15,17 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex "> 
                     @if (Auth::user()->is_administrator)
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" > 
-                            {{ __('Validar Usuários') }}
+                            {{ __('Usuários') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('races.index')" :active="request()->routeIs('races.*')"> 
+                            {{ __('Corridas') }}
                         </x-nav-link>
                     @else
                         <x-nav-link :href="route('dashboard.user')" :active="request()->routeIs('dashboard.user')" > 
                             {{ __('Veículos') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('races.index')" :active="request()->routeIs('races.*')"> 
+                            {{ __('Corridas') }}
                         </x-nav-link>
                     @endif
                 </div>

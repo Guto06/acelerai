@@ -17,9 +17,6 @@ Route::get('/dashboard', [DashboardController::class, 'dashboardAdministrator'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-//rota de criação de corridas
-Route::resource('races', RaceController::class);
-
 // Rota para validar o usuário
 Route::post('/user/{id}/validate', [DashboardController::class, 'validateUser'])
     ->middleware(['auth', 'verified'])
@@ -45,6 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/veiculos/update/{id}',[VehicleController::class,'update']);
     Route::get('/veiculos/edit/{id}',[VehicleController::class,'edit']);
     Route::get('/dashboard/user',[DashboardController::class,'dashboardUser'])->name('dashboard.user');
+
+    Route::resource('races', RaceController::class);
 
 });
 

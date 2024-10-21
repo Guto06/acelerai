@@ -1,8 +1,16 @@
 <x-app-layout>
+    <head>
+        <!-- Adicionar o CSS do Leaflet -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+        <!-- Adicionar o Leaflet Routing Machine -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+        <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    </head>
     
     <x-slot name="header">
         <h2 class="font-semibold text-xl leading-tight shadow-white" style="color: #FF9800;">
-            {{ __('Corridas') }}
+            {{ __('Corridas Disponíveis') }}
         </h2>
     </x-slot>
 
@@ -12,45 +20,84 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-[#0a161c] overflow-hidden shadow-sm sm:rounded-lg" style="border: 5px solid #FF9800;">
                 <div class="p-6">
+                    
+                    @if (Auth::user()->is_administrator)
                     <!-- Botão Criar Nova Corrida -->
-             <div class="text-right mb-4">
-                <a href="{{ route('races.create') }}" style="background-color: #FF9800;" class="hover:bg-orange-600 text-white font-bold py-2 px-4 rounded shadow transition-all duration-300 ease-in-out">
-                     Criar Nova Corrida
-                </a>
-            </div>
+                    <div class="text-right mb-4">
+                        <a href="{{ route('races.create') }}" style="background-color: #FF9800;" class="hover:bg-orange-600 text-white font-bold py-2 px-4 rounded shadow transition-all duration-300 ease-in-out">
+                            Criar Nova Corrida
+                        </a>
+                    </div>
+                    @endif
 
+                    <!-- Grid para exibir cards de corridas -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach($races as $race)
+                        <div class="bg-[#0a161c] border-2 border-orange-500 rounded-lg p-4 shadow-lg">
+                            <h1 class="text-center text-lg font-bold" style="color: #FF9800;">Corrida: {{ $race->name }}</h1>
+                            <p style="color: #FF9800;"><strong>ID:</strong> {{ $race->id }}</p>
+                            <p style="color: #FF9800;"><strong>Categoria:</strong> {{ $race->category }}</p>
+                            <p style="color: #FF9800;"><strong>Número Máximo de Veículos:</strong> {{ $race->max_vehicles }}</p>
+                            <p style="color: #FF9800;"><strong>Data:</strong> {{ $race->date }}</p>
 
-                    <!-- Tabela de Corridas -->
-                    <table class="min-w-full bg-gray-900 rounded-lg overflow-hidden shadow-lg">
-                        <thead>
-                            <tr class="bg-orange-500 text-white text-lg">
-                                <th class="py-3 px-6 text-left">ID</th>
-                                <th class="py-3 px-6 text-left">Nome</th>
-                                <th class="py-3 px-6 text-left">Categoria</th>
-                                <th class="py-3 px-6 text-left">Data</th>
-                                <th class="py-3 px-6 text-center">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($races as $race)
-                            <tr class="border-b border-gray-700 text-white hover:bg-gray-700 transition-all duration-300 ease-in-out">
-                                <td class="py-3 px-6">{{ $race->id }}</td>
-                                <td class="py-3 px-6">{{ $race->name }}</td>
-                                <td class="py-3 px-6">{{ $race->category }}</td>
-                                <td class="py-3 px-6">{{ $race->date }}</td>
-                                <td class="py-3 px-6 text-center flex justify-around">
-                                    <a href="{{ route('races.show', $race->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded shadow transition-all duration-300 ease-in-out">Ver</a>
-                                    <a href="{{ route('races.edit', $race->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded shadow transition-all duration-300 ease-in-out">Editar</a>
-                                    <form action="{{ route('races.destroy', $race->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta corrida?')" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded shadow transition-all duration-300 ease-in-out">Excluir</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            <!-- Mapa da corrida -->
+                            <div id="map-{{ $race->id }}" class="w-full h-48 mt-4 rounded-lg"></div>
+
+                            @if (Auth::user()->is_administrator)
+                            <!-- Botões redondos e espaçados -->
+                            <div class="flex justify-center space-x-4 mt-4">
+                                <a href="{{ route('races.edit', $race->id) }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
+                                    Editar
+                                </a>
+                                <form action="{{ route('races.destroy', $race->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
+                                        Excluir
+                                    </button>
+                                </form>
+                            </div>
+                            @endif
+                            @if (!Auth::user()->is_administrator)
+                            <!-- Botão Participar da corrida / tem que implementar-->
+                            <div class="flex justify-center space-x-4 mt-4">
+                                <a href="{{ route('dashboard.user', $race->id) }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
+                                    Participar da corrida
+                                </a>
+                                
+                            </div>
+                            @endif
+                        </div>
+
+                        <!-- Script para inicializar o mapa com coordenadas específicas de cada corrida -->
+                        <script>
+                            var map{{ $race->id }} = L.map('map-{{ $race->id }}').setView([-23.5505, -46.6333], 13); // inicializando o mapa em sao pa
+                            
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                                attribution: '© OpenStreetMap'
+                            }).addTo(map{{ $race->id }});
+                            L.Routing.control({
+                                waypoints: [
+                                    L.latLng({{ $race->start_latitude }}, {{ $race->start_longitude }}),
+                                    L.latLng({{ $race->end_latitude }}, {{ $race->end_longitude }})
+                                ],
+                                router: new L.Routing.OSRMv1({
+                                    serviceUrl: 'https://router.project-osrm.org/route/v1'
+                                }),
+                                createMarker: function(i, waypoint, n) {
+                                    var marker = L.marker(waypoint.latLng).bindPopup(i === 0 ? 'Largada' : 'Chegada');
+                                    return marker;
+                                },
+                                lineOptions: {
+                                    styles: [{ color: 'blue', opacity: 1, weight: 5 }]
+                                }
+                            }).addTo(map{{ $race->id }});  // <-- Use map{{ $race->id }} aqui
+
+                        </script>
+                        @endforeach
+                    </div>
+
                 </div>
             </div>
         </div>
