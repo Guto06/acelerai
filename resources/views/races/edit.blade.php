@@ -26,20 +26,26 @@
             </div>
             <div>
                 <label for="start_location" style="color: #FF9800;">Local de Largada:</label>
-                <input type="text" name="start_location" id="start_location" value="{{ $race->start_location }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
+                <input type="text" name="start_location" id="start_location" value="{{ $race->start_location }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white; padding: 8px; width: 100%; border-radius: 4px; margin-bottom: 10px;" />
+                
                 <label for="start_latitude" style="color: #FF9800;">Latitude da Largada:</label>
-                <input type="text" name="start_latitude" id="start_latitude" value="{{ $race->start_latitude }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
+                <input type="text" name="start_latitude" id="start_latitude" value="{{ $race->start_latitude }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white; padding: 8px; width: 100%; border-radius: 4px; margin-bottom: 10px;" />
+                
                 <label for="start_longitude" style="color: #FF9800;">Longitude da Largada:</label>
-                <input type="text" name="start_longitude" id="start_longitude" value="{{ $race->start_longitude }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
+                <input type="text" name="start_longitude" id="start_longitude" value="{{ $race->start_longitude }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white; padding: 8px; width: 100%; border-radius: 4px; margin-bottom: 10px;" />
             </div>
+
             <div>
                 <label for="end_location" style="color: #FF9800;">Local de Chegada:</label>
-                <input type="text" name="end_location" id="end_location" value="{{ $race->end_location }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
+                <input type="text" name="end_location" id="end_location" value="{{ $race->end_location }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white; padding: 8px; width: 100%; border-radius: 4px; margin-bottom: 10px;" />
+                
                 <label for="end_latitude" style="color: #FF9800;">Latitude da Chegada:</label>
-                <input type="text" name="end_latitude" id="end_latitude" value="{{ $race->end_latitude }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
+                <input type="text" name="end_latitude" id="end_latitude" value="{{ $race->end_latitude }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white; padding: 8px; width: 100%; border-radius: 4px; margin-bottom: 10px;" />
+                
                 <label for="end_longitude" style="color: #FF9800;">Longitude da Chegada:</label>
-                <input type="text" name="end_longitude" id="end_longitude" value="{{ $race->end_longitude }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
+                <input type="text" name="end_longitude" id="end_longitude" value="{{ $race->end_longitude }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white; padding: 8px; width: 100%; border-radius: 4px; margin-bottom: 10px;" />
             </div>
+
             <div class="flex items-center justify-center mt-4">
                 <x-primary-button class="ms-4" style="background-color: #FF9800; border: 2px solid #FF9800;">
                     {{ __('Atualizar') }}

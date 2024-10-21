@@ -24,21 +24,29 @@
                 <x-input-error :messages="$errors->get('date')" class="mt-2" />
             </div>
             <div>
-                <label for="start_location" style="color: #FF9800;">Local de Largada:</label>
-                <input type="text" name="start_location" id="start_location" value="{{ old('start_location') }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
-                <label for="start_latitude" style="color: #FF9800;">Latitude da Largada:</label>
-                <input type="text" name="start_latitude" id="start_latitude" value="{{ old('start_latitude') }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
-                <label for="start_longitude" style="color: #FF9800;">Longitude da Largada:</label>
-                <input type="text" name="start_longitude" id="start_longitude" value="{{ old('start_longitude') }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
-            </div>
             <div>
-                <label for="end_location" style="color: #FF9800;">Local de Chegada:</label>
-                <input type="text" name="end_location" id="end_location" value="{{ old('end_location') }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
-                <label for="end_latitude" style="color: #FF9800;">Latitude da Chegada:</label>
-                <input type="text" name="end_latitude" id="end_latitude" value="{{ old('end_latitude') }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
-                <label for="end_longitude" style="color: #FF9800;">Longitude da Chegada:</label>
-                <input type="text" name="end_longitude" id="end_longitude" value="{{ old('end_longitude') }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" onfocus="this.style.borderColor='#FF9800'; this.style.outlineColor='#FF9800';" />
-            </div>
+    <label for="start_location" style="color: #FF9800;">Local de Largada:</label>
+    <input type="text" name="start_location" id="start_location" value="{{ old('start_location') }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white; padding: 8px; width: 100%; border-radius: 4px; margin-bottom: 10px;" />
+    
+    <label for="start_latitude" style="color: #FF9800;">Latitude Largada:</label>
+    <input type="text" name="start_latitude" id="start_latitude" value="{{ old('start_latitude') }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white; padding: 8px; width: 100%; border-radius: 4px; margin-bottom: 10px;" />
+    
+    <label for="start_longitude" style="color: #FF9800;">Longitude Largada:</label>
+    <input type="text" name="start_longitude" id="start_longitude" value="{{ old('start_longitude') }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white; padding: 8px; width: 100%; border-radius: 4px; margin-bottom: 10px;" />
+</div>
+
+<div>
+    <label for="end_location" style="color: #FF9800;">Local de Chegada:</label>
+    <input type="text" name="end_location" id="end_location" value="{{ old('end_location') }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white; padding: 8px; width: 100%; border-radius: 4px; margin-bottom: 10px;" />
+    
+    <label for="end_latitude" style="color: #FF9800;">Latitude Chegada:</label>
+    <input type="text" name="end_latitude" id="end_latitude" value="{{ old('end_latitude') }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white; padding: 8px; width: 100%; border-radius: 4px; margin-bottom: 10px;" />
+    
+    <label for="end_longitude" style="color: #FF9800;">Longitude da Chegada:</label>
+    <input type="text" name="end_longitude" id="end_longitude" value="{{ old('end_longitude') }}" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white; padding: 8px; width: 100%; border-radius: 4px; margin-bottom: 10px;" />
+</div>
+
+
             <div class="flex items-center justify-center mt-4">
                 <x-primary-button class="ms-4" style="background-color: #FF9800; border: 2px solid #FF9800; color: white; font-weight: bold; padding: 10px 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                     {{ __('Criar') }}
