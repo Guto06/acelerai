@@ -19,7 +19,7 @@ class RaceController extends Controller
     public function create()
     {
         $user = Auth::user();
-        if(!$user->is_administrator){
+        if (!$user->is_administrator) {
             return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
         return view('races.create'); // Retorna a view para criar uma nova corrida
@@ -29,26 +29,39 @@ class RaceController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        if(!$user->is_administrator){
+
+        // Verifica se o usuário é administrador
+        if (!$user->is_administrator) {
             return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
+
+        // Valida os dados do formulário
         $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:1',
             'max_vehicles' => 'required|integer|max:10',
             'date' => 'required|date',
-            'start_location' => 'required|string|max:255',
             'start_latitude' => 'required|numeric',   // Validação da latitude de largada
             'start_longitude' => 'required|numeric',  // Validação da longitude de largada
-            'end_location' => 'required|string|max:255',
             'end_latitude' => 'required|numeric',     // Validação da latitude de chegada
             'end_longitude' => 'required|numeric',    // Validação da longitude de chegada
         ]);
-    
-        Race::create($request->all());
+
+        // Cria a corrida no banco de dados
+        Race::create([
+            'name' => $request->name,
+            'category' => $request->category,
+            'max_vehicles' => $request->max_vehicles,
+            'date' => $request->date,
+            'start_latitude' => $request->start_latitude,
+            'start_longitude' => $request->start_longitude,
+            'end_latitude' => $request->end_latitude,
+            'end_longitude' => $request->end_longitude,
+        ]);
+
+        // Redireciona para a lista de corridas com mensagem de sucesso
         return redirect()->route('races.index')->with('success', 'Corrida criada com sucesso!');
     }
-    
 
     // Exibir uma corrida específica
     public function show(Race $race)
@@ -60,7 +73,7 @@ class RaceController extends Controller
     public function edit(Race $race)
     {
         $user = Auth::user();
-        if(!$user->is_administrator){
+        if (!$user->is_administrator) {
             return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
         return view('races.edit', compact('race')); // Passa a corrida para a view de edição
@@ -70,7 +83,7 @@ class RaceController extends Controller
     public function update(Request $request, Race $race)
     {
         $user = Auth::user();
-        if(!$user->is_administrator){
+        if (!$user->is_administrator) {
             return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
         $request->validate([
@@ -94,7 +107,7 @@ class RaceController extends Controller
     public function destroy(Race $race)
     {
         $user = Auth::user();
-        if(!$user->is_administrator){
+        if (!$user->is_administrator) {
             return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
         $race->delete(); // Exclui a corrida

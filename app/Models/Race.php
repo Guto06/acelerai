@@ -9,7 +9,7 @@ class Race extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'category', 'max_vehicles', 'date', 'start_location', 'start_latitude', 'start_longitude', 'end_location', 'end_latitude', 'end_longitude'];
+    protected $fillable = ['name', 'category', 'max_vehicles', 'date', 'start_latitude', 'start_longitude', 'end_latitude', 'end_longitude'];
 
 
     public function vehicles()
