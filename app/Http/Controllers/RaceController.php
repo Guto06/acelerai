@@ -11,9 +11,17 @@ class RaceController extends Controller
     // Exibir uma lista de todas as corridas
     public function index()
     {
-        $races = Race::all(); // Recupera todas as corridas do banco de dados
-        return view('races.index', compact('races')); // Passa as corridas para a view
+        $currentDate = now(); // Data atual
+
+        // Recupera as corridas futuras
+        $upcomingRaces = Race::where('date', '>=', $currentDate)->orderBy('date', 'asc')->get();
+
+        // Recupera as corridas passadas
+        $pastRaces = Race::where('date', '<', $currentDate)->orderBy('date', 'desc')->get();
+
+        return view('races.index', compact('upcomingRaces', 'pastRaces'));
     }
+
 
     // Exibir o formulário para criar uma nova corrida
     public function create()
