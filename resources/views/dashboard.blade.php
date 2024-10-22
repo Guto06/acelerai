@@ -1,7 +1,7 @@
 <x-app-layout>
 <x-slot name="header">
     <h2 class="font-semibold text-xl leading-tight shadow-white" style="color: #FF9800;">
-        {{ __('Painel de Controle do Organizador') }}
+        {{ __('Painel de Validação') }}
     </h2>
 </x-slot>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
@@ -28,6 +28,7 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-gray-300 overflow-hidden shadow-sm sm:rounded-lg" style="border: 5px solid #FF9800;"> 
             <div class="p-6 "> 
+                @if (count($users) > 0)
                 @foreach ($users as $user)
                     <div class="flex justify-between items-center mb-4 border-b pb-4 border-black"> 
                         <!-- User info on the left -->
@@ -57,7 +58,7 @@
                                     Validar Usuário
                                 </button>
                             </form>
-<!-- Delete User button -->
+                            <!-- Delete User button -->
                             <form action="{{ route('user.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este usuário?')">
                                 @csrf
                                 @method('DELETE')
@@ -68,6 +69,9 @@
                         </div>
                     </div>
                 @endforeach
+                @else
+                    <p>Não há usuários a serem validados!</p>
+                @endif
             </div>
         </div>
     </div>
