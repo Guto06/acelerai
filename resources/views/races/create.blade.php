@@ -7,6 +7,23 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
         <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
     </head>
+    <div class="container-fluid">
+        <div class="row">
+            @if(session('msg'))
+                <div class="w-full max-w-lg mx-auto">
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative shadow-md animate-fade-in" role="alert">
+                        <span class="block sm:inline">{{ session('msg') }}</span>
+                        <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                            <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" onclick="this.parentElement.parentElement.classList.add('hidden')">
+                                <title>Fechar</title>
+                                <path d="M14.348 14.849a1 1 0 01-1.414 0L10 11.914l-2.935 2.935a1 1 0 01-1.414-1.414L8.586 10 5.651 7.065a1 1 0 111.414-1.414L10 8.586l2.935-2.935a1 1 0 111.414 1.414L11.414 10l2.935 2.935a1 1 0 010 1.414z"/>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
     <div class="flex items-center justify-center min-h-screen mt-12">
         <div class="w-full max-w-md p-6 space-y-6 bg-gray-900 rounded-lg shadow-lg" style="border: 2px solid #FF9800;">
             <h1 class="text-center text-xl font-bold text-white">Criar Corrida</h1>
@@ -23,14 +40,14 @@
                     <x-input-error :messages="$errors->get('category')" class="mt-2" />
                 </div>
                 <div>
-                    <x-input-label for="max_vehicles" :value="__('Número Máximo de Veículos')" style="color: #FF9800;" />
+                    <x-input-label for="max_vehicles" :value="__('Número Máximo de Veículos(max: 10)')" style="color: #FF9800;" />
                     <x-text-input id="max_vehicles" class="block mt-1 w-full rounded-md shadow-sm" type="number" name="max_vehicles" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" />
                     <x-input-error :messages="$errors->get('max_vehicles')" class="mt-2" />
                 </div>
                 <div>
-                    <x-input-label for="date" :value="__('Data')" style="color: #FF9800;" />
-                    <x-text-input id="date" class="block mt-1 w-full rounded-md shadow-sm" type="date" name="date" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" />
-                    <x-input-error :messages="$errors->get('date')" class="mt-2" />
+                    <x-input-label for="date" :value="__('Data e Hora')" style="color: #FF9800;" />
+                    <x-text-input id="date" class="block mt-1 w-full rounded-md shadow-sm" type="datetime-local" name="date_time" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" />
+                    <x-input-error :messages="$errors->get('date_time')" class="mt-2" />
                 </div>
 
                 <!-- Mapa para selecionar local de largada e chegada -->

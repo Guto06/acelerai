@@ -17,7 +17,7 @@
     <div class="py-4">
         @if (Auth::user()->is_administrator)
         <!-- Botão Criar Nova Corrida -->
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-2">
             <a href="{{ route('races.create') }}" style="background-color: #FF9800;" class="hover:bg-orange-600 text-white font-bold py-2 px-4 rounded shadow transition-all duration-300 ease-in-out">
                 Criar Nova Corrida
             </a>
@@ -36,7 +36,7 @@
                                 <h1 class="text-center text-lg font-bold mb-4" style="color: #FF9800;">Corrida: {{ $race->name }}</h1>
                                 <p style="color: #FF9800;"><strong>Categoria:</strong> {{ $race->category }}</p>
                                 <p style="color: #FF9800;"><strong>Número Máximo de Veículos:</strong> {{ $race->max_vehicles }}</p>
-                                <p style="color: #FF9800;"><strong>Data:</strong> {{ $race->date }}</p>>
+                                <p style="color: #FF9800;"><strong>Data:</strong> {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $race->date_time)->format('d/m/Y - H:i') }}</p>
                                 <div id="map-{{ $race->id }}" class="w-full h-48 mt-4 rounded-lg"></div>
                                 @if (Auth::user()->is_administrator)
                                 <!-- Botões redondos e espaçados -->
@@ -74,6 +74,7 @@
                                         L.latLng({{ $race->start_latitude }}, {{ $race->start_longitude }}),
                                         L.latLng({{ $race->end_latitude }}, {{ $race->end_longitude }})
                                     ],
+                                    draggableWaypoints: false, // Desabilita a movimentação dos waypoints
                                     lineOptions: {
                                         styles: [{ color: 'blue', opacity: 1, weight: 5 }]
                                     }
@@ -139,6 +140,7 @@
                                         L.latLng({{ $race->start_latitude }}, {{ $race->start_longitude }}),
                                         L.latLng({{ $race->end_latitude }}, {{ $race->end_longitude }})
                                     ],
+                                    draggableWaypoints: false, // Desabilita a movimentação dos waypoints
                                     lineOptions: {
                                         styles: [{ color: 'red', opacity: 1, weight: 5 }]
                                     }
