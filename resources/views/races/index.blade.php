@@ -51,15 +51,17 @@
                                                 Excluir
                                             </button>
                                         </form>
+                                        <a href="{{ route('races.show', $race->id) }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
+                                            Saiba mais
+                                        </a>
                                     </div>
                                 @endif
                                 @if (!Auth::user()->is_administrator)
                                 <!-- Botão Participar da corrida / tem que implementar-->
                                 <div class="flex justify-center space-x-4 mt-4">
-                                    <a href="{{ route('dashboard.user', $race->id) }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
-                                        Participar da corrida
+                                    <a href="{{ route('races.show', $race->id) }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
+                                        Saiba mais
                                     </a>
-                                    
                                 </div>
                                 @endif
                             </div>
@@ -101,7 +103,7 @@
                                 <h1 class="text-center text-lg font-bold mb-4" style="color: #FF9800;">Corrida: {{ $race->name }}</h1>
                                 <p style="color: #FF9800;"><strong>Categoria:</strong> {{ $race->category }}</p>
                                 <p style="color: #FF9800;"><strong>Número Máximo de Veículos:</strong> {{ $race->max_vehicles }}</p>
-                                <p style="color: #FF9800;"><strong>Data:</strong> {{ $race->date }}</p>
+                                <p style="color: #FF9800;"><strong>Data:</strong> {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $race->date_time)->format('d/m/Y - H:i') }}</p>
                                 <!-- Adicione mais informações sobre a corrida aqui -->
                                 <div id="map-{{ $race->id }}" class="w-full h-48 mt-4 rounded-lg"></div>
                                 @if (Auth::user()->is_administrator)
@@ -117,13 +119,16 @@
                                                 Excluir
                                             </button>
                                         </form>
+                                        <a href="{{ route('races.show', $race->id) }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
+                                            Saiba mais
+                                        </a>
                                     </div>
                                 @endif
                                 @if (!Auth::user()->is_administrator)
                                 <!-- Botão Participar da corrida / tem que implementar-->
                                 <div class="flex justify-center space-x-4 mt-4">
                                     <a href="{{ route('dashboard.user', $race->id) }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
-                                        Participar da corrida
+                                        Saiba mais
                                     </a>
                                     
                                 </div>
