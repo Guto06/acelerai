@@ -14,10 +14,14 @@ class RaceController extends Controller
         $currentDate = now(); // Data atual
 
         // Recupera as corridas futuras
-        $upcomingRaces = Race::where('date', '>=', $currentDate)->orderBy('date', 'asc')->get();
+        $upcomingRaces = Race::where('date_time', '>=', $currentDate)
+            ->orderBy('date_time', 'asc') // Ordena pela data e hora corretas
+            ->get();
 
         // Recupera as corridas passadas
-        $pastRaces = Race::where('date', '<', $currentDate)->orderBy('date', 'desc')->get();
+        $pastRaces = Race::where('date_time', '<', $currentDate)
+            ->orderBy('date_time', 'desc') // Ordena pela data e hora corretas
+            ->get();
 
         return view('races.index', compact('upcomingRaces', 'pastRaces'));
     }
@@ -48,7 +52,7 @@ class RaceController extends Controller
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:1',
             'max_vehicles' => 'required|integer|max:10',
-            'date' => 'required|date',
+            'date_time' => 'required|date_format:Y-m-d\TH:i',
             'start_latitude' => 'required|numeric',   // Validação da latitude de largada
             'start_longitude' => 'required|numeric',  // Validação da longitude de largada
             'end_latitude' => 'required|numeric',     // Validação da latitude de chegada
@@ -60,7 +64,7 @@ class RaceController extends Controller
             'name' => $request->name,
             'category' => $request->category,
             'max_vehicles' => $request->max_vehicles,
-            'date' => $request->date,
+            'date_time' => $request->date_time,
             'start_latitude' => $request->start_latitude,
             'start_longitude' => $request->start_longitude,
             'end_latitude' => $request->end_latitude,

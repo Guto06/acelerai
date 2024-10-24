@@ -18,7 +18,7 @@ class CreateRacesTable extends Migration
             $table->string('name');
             $table->string('category');
             $table->integer('max_vehicles');
-            $table->date('date');
+            $table->dateTime('date_time');
             $table->decimal('start_latitude', 10, 7);
             $table->decimal('start_longitude', 10, 7);
             $table->decimal('end_latitude', 10, 7);
