@@ -36,9 +36,18 @@
                 </div>
                 <div>
                     <x-input-label for="category" :value="__('Categoria')" style="color: #FF9800;" />
-                    <x-text-input id="category" class="block mt-1 w-full rounded-md shadow-sm" type="text" name="category" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" />
+                    
+                    <select id="category" name="category" class="block mt-1 w-full rounded-md shadow-sm" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;">
+                        <option value="" disabled selected>Selecione uma categoria</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>
+                
                     <x-input-error :messages="$errors->get('category')" class="mt-2" />
                 </div>
+                
                 <div>
                     <x-input-label for="max_vehicles" :value="__('Número Máximo de Veículos(max: 10)')" style="color: #FF9800;" />
                     <x-text-input id="max_vehicles" class="block mt-1 w-full rounded-md shadow-sm" type="number" name="max_vehicles" required style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" />
