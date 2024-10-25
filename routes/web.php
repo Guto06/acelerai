@@ -44,6 +44,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/user',[DashboardController::class,'dashboardUser'])->name('dashboard.user');
 
     Route::resource('races', RaceController::class);
+    Route::post('/races/{race}/participate', [RaceController::class, 'participate'])->name('races.participate');
+    Route::get('/races/{race}/eligible-vehicles', [RaceController::class, 'getEligibleVehicles'])->name('races.eligible-vehicles');
+
 
 });
 

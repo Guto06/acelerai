@@ -12,13 +12,13 @@ class VehicleController extends Controller
 {
 
     public function generateCategory($power){
-        if($power<200){
+        if($power<130){
             return 'D';
         }
-        if($power<400){
+        if($power<190){
             return 'C';
         }
-        if($power<600){
+        if($power<270){
             return 'B';
         }
         return 'A';

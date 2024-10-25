@@ -7,6 +7,24 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
         <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
     </head>
+    <div class="container-fluid">
+        <div class="row">
+            @if(session('msg') || session('error'))
+                <div class="w-full max-w-lg mx-auto">
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative shadow-md animate-fade-in" role="alert">
+                        <span class="block sm:inline">{{ session('msg') }}</span>
+                        <span class="block sm:inline text-red-500">{{ session('error') }}</span>
+                        <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                            <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" onclick="this.parentElement.parentElement.classList.add('hidden')">
+                                <title>Fechar</title>
+                                <path d="M14.348 14.849a1 1 0 01-1.414 0L10 11.914l-2.935 2.935a1 1 0 01-1.414-1.414L8.586 10 5.651 7.065a1 1 0 111.414-1.414L10 8.586l2.935-2.935a1 1 0 111.414 1.414L11.414 10l2.935 2.935a1 1 0 010 1.414z"/>
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
     <div class="container">
         <h1 class="text-center text-xl font-bold" style="color: #FF9800;">Corrida: {{ $race->name }}</h1>
         <p style="color: #FF9800;"><strong>ID:</strong> {{ $race->id }}</p>
@@ -31,7 +49,33 @@
             <a href="{{ route('races.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-full shadow-md transition-all duration-300 ease-in-out">
                 Voltar
             </a>
+
+            @if (!Auth::user()->is_administrator && !$race->vehicles()->where('vehicle_id', Auth::user()->vehicles->first()->id)->exists())
+                <button
+                    id="participateButton"
+                    onclick="showModal()"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Participar da Corrida
+                </button>                
+            @endif
         </div>
+
+        <!-- Modal -->
+        <div id="vehicleModal" class="fixed z-50 inset-0 flex items-center justify-center hidden">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+                <button id="closeModal" class="absolute top-0 right-0 m-2 text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mt-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                <div id="vehicle-list" class="mt-4">
+                    <!-- Conteúdo do modal será preenchido dinamicamente -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Fundo escurecido -->
+        <div id="modalBackdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
     </div>
 
     <!-- Espaço entre botões e mapa -->
@@ -63,4 +107,80 @@
         }
     }).addTo(map);
     </script>
+
+    <script>
+    // Funções de controle do modal
+    function showModal() {
+        document.getElementById('vehicleModal').classList.remove('hidden');
+        document.getElementById('modalBackdrop').classList.remove('hidden');
+        document.body.classList.add('modal-open');
+    }
+
+    function closeModal() {
+        document.getElementById('vehicleModal').classList.add('hidden');
+        document.getElementById('modalBackdrop').classList.add('hidden');
+        document.body.classList.remove('modal-open');
+    }
+
+    document.getElementById('participateButton').addEventListener('click', function () {
+        fetch(`/races/{{ $race->id }}/eligible-vehicles`, {
+            method: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.vehicles.length > 0) {
+                let vehicleList = document.getElementById('vehicle-list');
+                vehicleList.innerHTML = ''; // Limpa a lista de veículos
+
+                data.vehicles.forEach(vehicle => {
+                    vehicleList.innerHTML += `
+                    <form action="{{ route('races.participate', $race->id) }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="vehicle_id" value="${vehicle.id}">
+                        <div class="border p-4 mb-2 rounded-lg">
+                            <p><strong>Nome:</strong> ${vehicle.brand} ${vehicle.model}</p>
+                            <p><strong>Categoria:</strong> ${vehicle.category}</p> </br>
+                            <x-primary-button style="background-color: #FF9800;">
+                                {{ __('Participar com esse veículo') }}
+                            </x-primary-button>
+                        </div>
+                    </form>
+                    `;
+                });
+                showModal();
+            } else {
+                alert('Você não tem veículos elegíveis para participar desta corrida.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao buscar veículos:', error);
+            alert('Erro ao buscar veículos elegíveis.');
+        });
+    });
+
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+    </script>
+
+    <style>
+        #map {
+            z-index: 0;
+        }
+    
+        /* Quando o modal estiver aberto, o mapa será escondido abaixo do backdrop */
+        .modal-open #map {
+            z-index: -1; /* Esconde o mapa atrás do backdrop */
+        }
+    
+        #modalBackdrop {
+            z-index: 50; /* Certifique-se de que o backdrop tenha um valor maior que o mapa */
+        }
+    
+        #vehicleModal {
+            z-index: 60; /* O modal em si deve ficar acima de tudo */
+        }
+    </style>
+    
 </x-guest-layout>

@@ -33,7 +33,7 @@
                 @if (count($vehicles) > 0)
                     @foreach ($vehicles as $vehicle)
                         <div class="flex justify-between items-center border-b border-black py-4">
-                            <span>{{ $vehicle->model }}</span>
+                            <span>{{ $vehicle->brand  }} {{ $vehicle->model }}</span>
                             <div class="flex space-x-2">
                                 <!-- Botão Exibir -->
                                 <button

@@ -125,4 +125,41 @@ class RaceController extends Controller
         $race->delete(); // Exclui a corrida
         return redirect()->route('races.index')->with('success', 'Corrida excluída com sucesso!'); // Redireciona para a lista de corridas
     }
+
+    public function participate($raceId)
+    {
+        // Recupera a corrida
+        $race = Race::findOrFail($raceId);
+
+        // Recupera o veículo do usuário
+        $vehicle = Auth::user()->vehicles()->where('category', $race->category)->first();
+
+        // Verifica se o usuário possui um veículo que pertence à mesma categoria da corrida
+        if (!$vehicle) {
+            return redirect()->back()->with('error', 'Você não possui um veículo na categoria desta corrida.');
+        }
+
+        // Verifica se o número máximo de veículos já foi atingido
+        if ($race->vehicles()->count() >= $race->max_vehicles) {
+            return redirect()->back()->with('error', 'A corrida já atingiu o número máximo de participantes.');
+        }
+
+        // Adiciona o veículo do usuário à corrida
+        $race->vehicles()->attach($vehicle->id);
+
+        return redirect()->back()->with('success', 'Você foi adicionado à corrida com sucesso.');
+    }
+    
+    public function getEligibleVehicles($raceId)
+    {
+        $race = Race::findOrFail($raceId);
+        $user = Auth::user();
+
+        // Busca os veículos do usuário que pertencem à mesma categoria da corrida
+        $vehicles = $user->vehicles()->where('category', $race->category)->get();
+
+        return response()->json([
+            'vehicles' => $vehicles
+        ]);
+    }
 }
