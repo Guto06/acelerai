@@ -127,7 +127,7 @@
                                 @if (!Auth::user()->is_administrator)
                                 <!-- Botão Participar da corrida / tem que implementar-->
                                 <div class="flex justify-center space-x-4 mt-4">
-                                    <a href="{{ route('dashboard.user', $race->id) }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
+                                    <a href="{{ route('races.show', $race->id) }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
                                         Saiba mais
                                     </a>
                                     
