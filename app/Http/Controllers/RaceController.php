@@ -131,6 +131,10 @@ class RaceController extends Controller
         // Recupera a corrida
         $race = Race::findOrFail($raceId);
 
+        if (now()->greaterThan($race->date_time)) {
+            return redirect()->back()->with('error', 'Esta corrida já ocorreu, não é possível mais participar.');
+        }
+
         // Recupera o veículo do usuário
         $vehicle = Auth::user()->vehicles()->where('category', $race->category)->first();
 

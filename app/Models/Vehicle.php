@@ -11,6 +11,6 @@ class Vehicle extends Model
     protected $fillable = ['model', 'brand', 'year', 'power'];
 
     public function user(){
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo('App\Models\User');
     }
 }
