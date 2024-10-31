@@ -143,7 +143,7 @@
                                     </ul>
                                 </div>
                             @else
-                                <p>Nenhum participante inscrito até o momento.</p>
+                                <p class="mt-4 mb-4 ml-2">Nenhum participante inscrito até o momento.</p>
                             @endif
 
                         </div>
@@ -203,35 +203,40 @@
                                 })
                                 .then(response => response.json())
                                 .then(data => {
-                                    if (data.vehicles.length > 0) {
-                                        let vehicleList = document.getElementById('vehicle-list');
-                                        vehicleList.innerHTML = ''; // Limpa a lista de veículos
+                                    let vehicleList = document.getElementById('vehicle-list');
+                                    vehicleList.innerHTML = ''; // Limpa a lista de veículos
 
+                                    if (data.vehicles.length > 0) {
+                                        // Exibe os veículos caso existam
                                         data.vehicles.forEach(vehicle => {
                                             vehicleList.innerHTML += `
-                                <form action="{{ route('races.participate', $race->id) }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="vehicle_id" value="${vehicle.id}">
-                                    <div class="border p-4 mb-2 rounded-lg">
-                                        <p><strong>Nome:</strong> ${vehicle.brand} ${vehicle.model}</p>
-                                        <p><strong>Categoria:</strong> ${vehicle.category}</p> </br>
-                                        <x-primary-button style="background-color: #FF9800;">
-                                            {{ __('Participar com esse veículo') }}
-                                        </x-primary-button>
-                                    </div>
-                                </form>
-                                `;
+                    <form action="{{ route('races.participate', $race->id) }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="vehicle_id" value="${vehicle.id}">
+                        <div class="border p-4 mb-2 rounded-lg">
+                            <p><strong>Nome:</strong> ${vehicle.brand} ${vehicle.model}</p>
+                            <p><strong>Categoria:</strong> ${vehicle.category}</p></br>
+                            <x-primary-button style="background-color: #FF9800;">
+                                {{ __('Participar com esse veículo') }}
+                            </x-primary-button>
+                        </div>
+                    </form>
+                    `;
                                         });
                                         showModal();
                                     } else {
-                                        alert('Você não tem veículos elegíveis para participar desta corrida.');
+                                        // Exibe a mensagem caso não haja veículos na categoria
+                                        vehicleList.innerHTML += `
+                        <p class="text-center mt-4 mb-4 text-red-500 font-bold">Nenhum veículo nesta categoria!</p>
+                `;
+                                        showModal();
                                     }
                                 })
                                 .catch(error => {
                                     console.error('Erro ao buscar veículos:', error);
-                                    alert('Erro ao buscar veículos elegíveis.');
                                 });
                         });
+
 
                         document.getElementById('closeModal').addEventListener('click', closeModal);
                     </script>
