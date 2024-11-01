@@ -280,6 +280,6 @@ class RaceController extends Controller
             'points' => $points,
         ]);
 
-        return redirect()->back()->with('msg', 'Resultados inseridos com sucesso!');
+        return redirect("/races/{$raceId}/enter-results")->with('msg', 'Dados inseridos com sucesso!');
     }
 }
