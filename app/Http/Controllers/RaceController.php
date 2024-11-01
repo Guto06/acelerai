@@ -6,6 +6,7 @@ use App\Models\Race; // Importando o modelo Race
 use Illuminate\Support\Facades\Auth; // Importando o facade Auth
 use App\Models\RaceVehicle; // Importando o modelo RaceVehicle
 use Illuminate\Http\Request;
+use App\Models\User; // Importando o modelo User
 
 class RaceController extends Controller
 {
@@ -107,7 +108,7 @@ class RaceController extends Controller
         ]);
 
         $race->update($request->all()); // Atualiza a corrida com os dados recebidos
-        return redirect('/races')->with('msg','Corrida atualizada com sucesso!');;
+        return redirect('/races')->with('msg', 'Corrida atualizada com sucesso!');;
     }
 
     // Remover uma corrida do banco de dados
@@ -281,5 +282,44 @@ class RaceController extends Controller
         ]);
 
         return redirect("/races/{$raceId}/enter-results")->with('msg', 'Dados inseridos com sucesso!');
+    }
+
+    public function performanceSummary($raceId, $userId)
+    {
+        $race = Race::with('vehicles.user')->findOrFail($raceId);
+        $user = User::findOrFail($userId);
+
+        // Obter o veículo do usuário na corrida
+        $userVehicle = $race->vehicles->where('user_id', $userId)->first();
+
+        if ($userVehicle) {
+            // Obter a posição e pontuação do veículo
+            $raceVehicle = RaceVehicle::where('race_id', $raceId)
+                ->where('vehicle_id', $userVehicle->id)
+                ->first();
+
+            if(!$raceVehicle->points){
+                return response()->json([
+                    'performance' => null
+                ]);
+            }
+
+            return response()->json([
+                'performance' => [
+                    'name' => $user->name,
+                    'vehicle' => $userVehicle->brand . ' ' . $userVehicle->model,
+                    'position' => $raceVehicle->position,
+                    'points' => $raceVehicle->points,
+                    'time' => $raceVehicle->time,
+                    'fuel_consumption' => $raceVehicle->fuel_consumption,
+                    'average_speed' => $raceVehicle->average_speed,
+                    'car_condition' => $raceVehicle->car_condition,
+                ]
+            ]);
+        } else {
+            return response()->json([
+                'performance' => null
+            ]);
+        }
     }
 }

@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/races/{race}/eligible-vehicles', [RaceController::class, 'getEligibleVehicles'])->name('races.eligible-vehicles');
     Route::get('/races/{raceId}/enter-results', [RaceController::class, 'showEnterResultsForm'])->name('races.enterResultsForm');
     Route::post('/races/{raceId}/enter-results/{vehicleId}', [RaceController::class, 'enterResults'])->name('races.enterResults');
+    Route::get('/races/{race}/performance-summary/{user}', [RaceController::class, 'performanceSummary']);
 });
 
 require __DIR__ . '/auth.php';
