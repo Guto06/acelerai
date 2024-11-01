@@ -97,7 +97,7 @@
                         @if (
                             !Auth::user()->is_administrator &&
                                 Auth::user()->vehicles->isNotEmpty() &&
-                                !$race->vehicles()->where('vehicle_id', Auth::user()->vehicles->first()->id)->exists() &&
+                                !$race->vehicles()->whereIn('vehicle_id', Auth::user()->vehicles->pluck('id'))->exists() &&
                                 now()->lessThan($race->date_time))
                             <button id="participateButton" onclick="showModal()"
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
