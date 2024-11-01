@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Race; // Importando o modelo Race
 use Illuminate\Support\Facades\Auth; // Importando o facade Auth
+use App\Models\RaceVehicle; // Importando o modelo RaceVehicle
 use Illuminate\Http\Request;
 
 class RaceController extends Controller
@@ -153,7 +154,7 @@ class RaceController extends Controller
 
         return redirect()->back()->with('success', 'Você foi adicionado à corrida com sucesso.');
     }
-    
+
     public function getEligibleVehicles($raceId)
     {
         $race = Race::findOrFail($raceId);
@@ -165,5 +166,112 @@ class RaceController extends Controller
         return response()->json([
             'vehicles' => $vehicles
         ]);
+    }
+
+    public function showEnterResultsForm($raceId)
+    {
+        $race = Race::with('vehicles')->findOrFail($raceId);
+
+        // Obter IDs dos veículos que já possuem pontuação
+        $vehiclesWithResults = RaceVehicle::where('race_id', $raceId)->whereNotNull('points')->pluck('vehicle_id')->toArray();
+
+        // Filtrar veículos que ainda não têm resultados
+        $availableVehicles = $race->vehicles->filter(function ($vehicle) use ($vehiclesWithResults) {
+            return !in_array($vehicle->id, $vehiclesWithResults);
+        });
+
+        // Obter posições já ocupadas na corrida
+        $occupiedPositions = RaceVehicle::where('race_id', $raceId)->pluck('position')->toArray();
+
+        return view('races.enter_results', [
+            'race' => $race,
+            'availableVehicles' => $availableVehicles,
+            'occupiedPositions' => $occupiedPositions
+        ]);
+    }
+
+
+
+    function calculatePoints($time, $fuelConsumption, $averageSpeed, $carCondition, $position)
+    {
+        $points = 0;
+
+        // Convertendo tempo de string para horas (em formato decimal)
+        $timeParts = explode(':', $time);
+        $timeInHours = $timeParts[0] + ($timeParts[1] / 60) + ($timeParts[2] / 3600);
+
+        // Pontos pelo tempo (menor tempo ganha mais)
+        $timePoints = 1000 / $timeInHours;  // Exemplo de cálculo baseado no tempo
+
+        // Pontos pelo consumo (menor consumo ganha mais)
+        $fuelPoints = 500 / $fuelConsumption;
+
+        // Pontos pela velocidade média (maior velocidade ganha mais)
+        $speedPoints = $averageSpeed * 10;
+
+        // Pontos pelo estado do carro
+        switch ($carCondition) {
+            case 'excellent':
+                $conditionPoints = 100;
+                break;
+            case 'good':
+                $conditionPoints = 75;
+                break;
+            case 'fair':
+                $conditionPoints = 50;
+                break;
+            case 'poor':
+                $conditionPoints = 25;
+                break;
+            default:
+                $conditionPoints = 0;
+                break;
+        }
+
+        // Pontos pela posição na corrida
+        $positionPoints = max(0, 500 - ($position - 1) * 100);
+
+        // Somando todos os pontos
+        $points = $timePoints + $fuelPoints + $speedPoints + $conditionPoints + $positionPoints;
+
+        return round($points);
+    }
+
+    public function enterResults(Request $request, $raceId, $vehicleId)
+    {
+        // Validação dos dados
+        $validated = $request->validate([
+            'position' => 'required|integer|between:1,10',
+            'time' => 'required|date_format:H:i:s',
+            'fuel_consumption' => 'required|numeric',
+            'average_speed' => 'required|numeric',
+            'car_condition' => 'required|in:excellent,good,fair,poor',
+        ]);
+
+        // Recupera o registro da corrida e do veículo
+        $raceVehicle = RaceVehicle::where('race_id', $raceId)
+            ->where('vehicle_id', $vehicleId)
+            ->firstOrFail();
+
+        // Calcula a pontuação usando a nova função
+        $points = $this->calculatePoints(
+            $validated['time'],
+            $validated['fuel_consumption'],
+            $validated['average_speed'],
+            $validated['car_condition'],
+            $validated['position']
+        );
+
+        // Atualiza o registro com os resultados e a pontuação
+        $raceVehicle->update([
+            'position' => $validated['position'],
+            'time' => $validated['time'],
+            'fuel_consumption' => $validated['fuel_consumption'],
+            'average_speed' => $validated['average_speed'],
+            'car_condition' => $validated['car_condition'],
+            'points' => $points,
+        ]);
+
+        return redirect()->back()->with('msg', 'Resultados inseridos com sucesso!');
     }
 }
