@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -35,19 +36,20 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::delete('/user/{id}/destroy', [ProfileController::class, 'destroyAdm'])->name('user.destroy');
-    Route::get('/veiculos/novo',[VehicleController::class,'create']);
-    Route::post('/veiculos/novo/criar',[VehicleController::class,'store']);
-    Route::get('/veiculos/show/{id}',[VehicleController::class,'show']);
-    Route::delete('/veiculos/delete/{id}',[VehicleController::class,'destroy']);
-    Route::put('/veiculos/update/{id}',[VehicleController::class,'update']);
-    Route::get('/veiculos/edit/{id}',[VehicleController::class,'edit']);
-    Route::get('/dashboard/user',[DashboardController::class,'dashboardUser'])->name('dashboard.user');
+    Route::get('/veiculos/novo', [VehicleController::class, 'create']);
+    Route::post('/veiculos/novo/criar', [VehicleController::class, 'store']);
+    Route::get('/veiculos/show/{id}', [VehicleController::class, 'show']);
+    Route::delete('/veiculos/delete/{id}', [VehicleController::class, 'destroy']);
+    Route::put('/veiculos/update/{id}', [VehicleController::class, 'update']);
+    Route::get('/veiculos/edit/{id}', [VehicleController::class, 'edit']);
+    Route::get('/dashboard/user', [DashboardController::class, 'dashboardUser'])->name('dashboard.user');
 
     Route::resource('races', RaceController::class);
     Route::post('/races/{race}/participate', [RaceController::class, 'participate'])->name('races.participate');
     Route::get('/races/{race}/eligible-vehicles', [RaceController::class, 'getEligibleVehicles'])->name('races.eligible-vehicles');
-
-
+    Route::get('/races/{raceId}/enter-results', [RaceController::class, 'showEnterResultsForm'])->name('races.enterResultsForm');
+    Route::post('/races/{raceId}/enter-results/{vehicleId}', [RaceController::class, 'enterResults'])->name('races.enterResults');
+    Route::get('/races/{race}/performance-summary/{user}', [RaceController::class, 'performanceSummary']);
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -18,6 +18,10 @@ class CreateRaceVehicleTable extends Migration
             $table->integer('position')->nullable();  // Posição de chegada
             $table->time('time')->nullable();         // Tempo total da corrida
             $table->timestamps();
+            $table->float('fuel_consumption')->nullable();  // Consumo de combustível
+            $table->float('average_speed')->nullable();     // Velocidade média
+            $table->enum('car_condition', ['excellent', 'good', 'fair', 'poor'])->nullable();  // Estado do carro
+            $table->integer('points')->nullable(); 
         });
     }
 
