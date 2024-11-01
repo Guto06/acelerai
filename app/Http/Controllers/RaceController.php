@@ -97,19 +97,17 @@ class RaceController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-            'max_vehicles' => 'required|integer',
-            'date' => 'required|date',
-            'start_location' => 'required|string|max:255',
+            'category' => 'required|string|max:1',
+            'max_vehicles' => 'required|integer|max:10',
+            'date_time' => 'required|date_format:Y-m-d\TH:i',
             'start_latitude' => 'required|numeric',   // Validação da latitude de largada
             'start_longitude' => 'required|numeric',  // Validação da longitude de largada
-            'end_location' => 'required|string|max:255',
             'end_latitude' => 'required|numeric',     // Validação da latitude de chegada
             'end_longitude' => 'required|numeric',    // Validação da longitude de chegada
         ]);
-
+        
         $race->update($request->all()); // Atualiza a corrida com os dados recebidos
-        return redirect()->route('races.index')->with('success', 'Corrida atualizada com sucesso!'); // Redireciona para a lista de corridas
+        return redirect('/races')->with('msg','Corrida atualizada com sucesso!');;
     }
 
     // Remover uma corrida do banco de dados
