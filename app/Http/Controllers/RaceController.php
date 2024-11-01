@@ -43,10 +43,7 @@ class RaceController extends Controller
     {
         $user = Auth::user();
 
-        // Verifica se o usuário é administrador
-        if (!$user->is_administrator) {
-            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
-        }
+        abort_if(!$user->is_administrator, 403, 'Você não tem permissão para acessar essa página');
 
         // Valida os dados do formulário
         $request->validate([
@@ -96,9 +93,8 @@ class RaceController extends Controller
     public function update(Request $request, Race $race)
     {
         $user = Auth::user();
-        if (!$user->is_administrator) {
-            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
-        }
+        abort_if(!$user->is_administrator, 403, 'Você não tem permissão para acessar essa página');
+
         $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:255',
@@ -120,15 +116,18 @@ class RaceController extends Controller
     public function destroy(Race $race)
     {
         $user = Auth::user();
-        if (!$user->is_administrator) {
-            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
-        }
+        abort_if(!$user->is_administrator, 403, 'Você não tem permissão para acessar essa página');
+
         $race->delete(); // Exclui a corrida
         return redirect()->route('races.index')->with('success', 'Corrida excluída com sucesso!'); // Redireciona para a lista de corridas
     }
 
     public function participate($raceId)
     {
+
+        $user = Auth::user();
+        abort_if($user->is_administrator, 403, 'Você não tem permissão para acessar essa página');
+
         // Recupera a corrida
         $race = Race::findOrFail($raceId);
 
@@ -170,6 +169,14 @@ class RaceController extends Controller
 
     public function showEnterResultsForm($raceId)
     {
+
+        $user = Auth::user();
+
+        if (!$user->is_administrator) {
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
+        
+
         $race = Race::with('vehicles')->findOrFail($raceId);
 
         // Obter IDs dos veículos que já possuem pontuação
@@ -189,8 +196,6 @@ class RaceController extends Controller
             'occupiedPositions' => $occupiedPositions
         ]);
     }
-
-
 
     function calculatePoints($time, $fuelConsumption, $averageSpeed, $carCondition, $position)
     {
@@ -239,6 +244,8 @@ class RaceController extends Controller
 
     public function enterResults(Request $request, $raceId, $vehicleId)
     {
+        $user = Auth::user();
+        abort_if(!$user->is_administrator, 403, 'Você não tem permissão para acessar essa página');
         // Validação dos dados
         $validated = $request->validate([
             'position' => 'required|integer|between:1,10',
