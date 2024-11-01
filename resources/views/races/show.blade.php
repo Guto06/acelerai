@@ -103,6 +103,11 @@
                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Participar da Corrida
                             </button>
+                        @else
+                            <button id="participateButton" onclick="showModal()" style="display:none"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Participar da Corrida
+                            </button>
                         @endif
 
                         <button id="performanceSummaryButton" onclick="showPerformanceSummary()"
@@ -267,15 +272,16 @@
                                     console.error('Erro ao buscar veículos:', error);
                                 });
                         });
-
+                        //onclick="closePerformanceSummaryModal()
                         document.getElementById('closeModal').addEventListener('click', closeModal);
+                        
 
                         function closePerformanceSummaryModal() {
                             document.getElementById('performanceSummaryModal').classList.add('hidden');
                             document.getElementById('performanceSummaryBackdrop').classList.add('hidden');
                             document.body.classList.remove('modal-open');
                         }
-
+                        document.getElementById('closePerformanceSummaryModal').addEventListener('click', closePerformanceSummaryModal);
                         // Funções de controle do modal de resumo de performance
                         function showPerformanceSummary() {
                             let userId = {{ Auth::user()->id }};
@@ -323,7 +329,7 @@
                                 });
                         }
 
-                        document.getElementById('closePerformanceSummaryModal').addEventListener('click', closePerformanceSummaryModal);
+                      
                     </script>
 
                     <style>
