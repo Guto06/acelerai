@@ -105,7 +105,7 @@ class RaceController extends Controller
             'end_latitude' => 'required|numeric',     // Validação da latitude de chegada
             'end_longitude' => 'required|numeric',    // Validação da longitude de chegada
         ]);
-        
+
         $race->update($request->all()); // Atualiza a corrida com os dados recebidos
         return redirect('/races')->with('msg','Corrida atualizada com sucesso!');;
     }
@@ -120,8 +120,11 @@ class RaceController extends Controller
         return redirect()->route('races.index')->with('success', 'Corrida excluída com sucesso!'); // Redireciona para a lista de corridas
     }
 
-    public function participate($raceId)
+    public function participate(Request $request, $raceId)
     {
+        $request->validate([
+            'vehicle_id' => 'required|integer',
+        ]);
 
         $user = Auth::user();
         abort_if($user->is_administrator, 403, 'Você não tem permissão para acessar essa página');
@@ -147,7 +150,7 @@ class RaceController extends Controller
         }
 
         // Adiciona o veículo do usuário à corrida
-        $race->vehicles()->attach($vehicle->id);
+        $race->vehicles()->attach($request->vehicle_id);
 
         return redirect()->back()->with('success', 'Você foi adicionado à corrida com sucesso.');
     }
@@ -173,7 +176,7 @@ class RaceController extends Controller
         if (!$user->is_administrator) {
             return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
-        
+
 
         $race = Race::with('vehicles')->findOrFail($raceId);
 

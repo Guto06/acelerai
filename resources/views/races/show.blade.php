@@ -67,6 +67,13 @@
                     <!-- Botões redondos e espaçados -->
                     <div class="flex justify-center space-x-4 mt-4 mb-8">
                         @if (Auth::user()->is_administrator)
+                            @if (now()->greaterThanOrEqualTo($race->date_time))
+                                <a href="{{ route('races.enterResultsForm', $race->id) }}"
+                                    class="bg-green-500 text-white font-bold py-2 px-6 rounded-full shadow-md transition-all duration-300 ease-in-out"
+                                    style="border: 2px solid #FFFFFF;">
+                                    Inserir Resultados
+                                </a>
+                            @endif
                             <a href="{{ route('races.edit', $race->id) }}"
                                 class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-full shadow-md transition-all duration-300 ease-in-out"
                                 style="border: 2px solid #FFFFFF;">
@@ -212,8 +219,8 @@
                                             vehicleList.innerHTML += `
                     <form action="{{ route('races.participate', $race->id) }}" method="POST">
                         @csrf
-                        <input type="hidden" name="vehicle_id" value="${vehicle.id}">
                         <div class="border p-4 mb-2 rounded-lg">
+                            <input type="hidden" name="vehicle_id" value="${vehicle.id}">
                             <p><strong>Nome:</strong> ${vehicle.brand} ${vehicle.model}</p>
                             <p><strong>Categoria:</strong> ${vehicle.category}</p></br>
                             <x-primary-button style="background-color: #FF9800;">
