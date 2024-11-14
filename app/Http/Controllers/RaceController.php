@@ -77,7 +77,13 @@ class RaceController extends Controller
     // Exibir uma corrida específica
     public function show(Race $race)
     {
-        return view('races.show', compact('race')); // Passa a corrida para a view
+        // Carregar os veículos participantes com suas pontuações
+        $raceVehicles = RaceVehicle::where('race_id', $race->id)
+            ->with('vehicle')
+            ->orderBy('points', 'desc')
+            ->get();
+
+        return view('races.show', compact('race', 'raceVehicles')); // Passa a corrida e os veículos para a view
     }
 
     // Exibir o formulário para editar uma corrida existente
@@ -298,7 +304,7 @@ class RaceController extends Controller
                 ->where('vehicle_id', $userVehicle->id)
                 ->first();
 
-            if(!$raceVehicle->points){
+            if (!$raceVehicle->points) {
                 return response()->json([
                     'performance' => null
                 ]);

@@ -105,8 +105,8 @@
                             </button>
                         @else
                             <button id="participateButton" onclick="showModal()" style="display:none"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Participar da Corrida
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Participar da Corrida
                             </button>
                         @endif
 
@@ -165,15 +165,38 @@
                                 <div class="mt-6 ml-4">
                                     <h2 class="text-xl font-bold mb-4">Pilotos Inscritos:
                                         {{ $race->vehicles()->count() }}</h2>
+                                    @if ($raceVehicles->where('points', '>', 0)->isNotEmpty())
+                                        <h3 class="text-lg font-bold mb-4">Resultado:</h3>
+                                    @endif
                                     <ul class="space-y-4 border p-4 rounded-lg mb-4">
-                                        @foreach ($race->vehicles as $vehicle)
+                                        @foreach ($raceVehicles as $raceVehicle)
                                             <div
                                                 class="flex justify-between items-center mb-4 border-b pb-4 border-black">
                                                 <li>
-                                                    <p><strong>Piloto:</strong> {{ $vehicle->user->name }}</p>
-                                                    <p><strong>Carro:</strong> {{ $vehicle->brand }}
-                                                        {{ $vehicle->model }}</p>
+                                                    <p><strong>Piloto:</strong> {{ $raceVehicle->vehicle->user->name }}
+                                                    </p>
+                                                    <p><strong>Carro:</strong> {{ $raceVehicle->vehicle->brand }}
+                                                        {{ $raceVehicle->vehicle->model }}</p>
+                                                    <p><strong>Potência :</strong> {{ $raceVehicle->vehicle->power }}
+                                                        HP
+                                                    </p>
                                                 </li>
+                                                <div class="text-right mr-20">
+                                                    <p><strong>Pontuação:</strong>
+                                                        @if ($raceVehicle->points)
+                                                            {{ $raceVehicle->points }}
+                                                        @else
+                                                            Indisponível
+                                                        @endif
+                                                    </p>
+                                                    <p><strong>Posição:</strong>
+                                                        @if ($raceVehicle->position)
+                                                            {{ $raceVehicle->position }}
+                                                        @else
+                                                            Indisponível
+                                                        @endif
+                                                    </p>
+                                                </div>
                                             </div>
                                         @endforeach
                                     </ul>
@@ -274,7 +297,7 @@
                         });
                         //onclick="closePerformanceSummaryModal()
                         document.getElementById('closeModal').addEventListener('click', closeModal);
-                        
+
 
                         function closePerformanceSummaryModal() {
                             document.getElementById('performanceSummaryModal').classList.add('hidden');
@@ -328,8 +351,6 @@
                                     console.error('Erro ao buscar resumo de performance:', error);
                                 });
                         }
-
-                      
                     </script>
 
                     <style>
