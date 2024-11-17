@@ -367,4 +367,9 @@ class RaceController extends Controller
 
         return view('ranking.show', compact('category', 'pilotPoints', 'pilots'));
     }
+
+    public function indexRanking()
+    {
+        return view('ranking.index');
+    }
 }

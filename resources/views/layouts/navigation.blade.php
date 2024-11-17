@@ -17,17 +17,17 @@
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" > 
                             {{ __('Usuários') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('races.index')" :active="request()->routeIs('races.*')"> 
-                            {{ __('Corridas') }}
-                        </x-nav-link>
                     @else
                         <x-nav-link :href="route('dashboard.user')" :active="request()->routeIs('dashboard.user')" > 
                             {{ __('Veículos') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('races.index')" :active="request()->routeIs('races.*')"> 
-                            {{ __('Corridas') }}
-                        </x-nav-link>
                     @endif
+                    <x-nav-link :href="route('races.index')" :active="request()->routeIs('races.*')"> 
+                        {{ __('Corridas') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('ranking.index')" :active="request()->routeIs('ranking.*')"> 
+                        {{ __('Ranking') }}
+                    </x-nav-link>
                 </div>
             </div>
             <!-- Settings Dropdown -->

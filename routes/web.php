@@ -50,7 +50,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/races/{raceId}/enter-results', [RaceController::class, 'showEnterResultsForm'])->name('races.enterResultsForm');
     Route::post('/races/{raceId}/enter-results/{vehicleId}', [RaceController::class, 'enterResults'])->name('races.enterResults');
     Route::get('/races/{race}/performance-summary/{user}', [RaceController::class, 'performanceSummary']);
-    Route::get('/season-ranking/{category}', [RaceController::class, 'categoryRanking'])->name('category-ranking');
+    Route::get('/season-ranking/{category}', [RaceController::class, 'categoryRanking'])->name('ranking.show');
+    Route::get('/season-ranking', [RaceController::class, 'indexRanking'])->name('ranking.index');
 });
 
 require __DIR__ . '/auth.php';
