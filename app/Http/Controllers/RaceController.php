@@ -328,4 +328,38 @@ class RaceController extends Controller
             ]);
         }
     }
+
+    public function categoryRanking($category)
+    {
+        // Verificar se a categoria é válida
+        $categories = ['A', 'B', 'C', 'D'];
+        if (!in_array($category, $categories)) {
+            return redirect('/')->with('msg', 'A categoria não existe!');
+        }
+
+        // Obter os veículos de corrida da categoria com suas pontuações
+        $raceVehicles = RaceVehicle::whereHas('vehicle', function ($query) use ($category) {
+            $query->where('category', $category);
+        })->with('vehicle.user')->get();
+
+        // Calcular a pontuação acumulada de cada piloto
+        $pilotPoints = [];
+        foreach ($raceVehicles as $raceVehicle) {
+            $userId = $raceVehicle->vehicle->user->id;
+            if (!isset($pilotPoints[$userId])) {
+                $pilotPoints[$userId] = [
+                    'name' => $raceVehicle->vehicle->user->name,
+                    'points' => 0
+                ];
+            }
+            $pilotPoints[$userId]['points'] += $raceVehicle->points;
+        }
+
+        // Ordenar os pilotos pela pontuação acumulada
+        usort($pilotPoints, function ($a, $b) {
+            return $b['points'] <=> $a['points'];
+        });
+
+        return view('races.category_ranking', compact('category', 'pilotPoints'));
+    }
 }
