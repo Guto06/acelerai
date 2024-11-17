@@ -360,6 +360,11 @@ class RaceController extends Controller
             return $b['points'] <=> $a['points'];
         });
 
-        return view('races.category_ranking', compact('category', 'pilotPoints'));
+        // Obter todos os pilotos da categoria, mesmo que não tenham participado de nenhuma corrida
+        $pilots = User::whereHas('vehicles', function ($query) use ($category) {
+            $query->where('category', $category);
+        })->distinct()->orderBy('name')->get();
+
+        return view('ranking.show', compact('category', 'pilotPoints', 'pilots'));
     }
 }
