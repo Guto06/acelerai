@@ -26,6 +26,11 @@
     </div>
     <div class="flex items-center justify-center min-h-screen">
         <div class="w-full max-w-md p-6 space-y-6 bg-gray-900 rounded-lg shadow-lg" style="border: 2px solid #FF9800;">
+            <a href="{{ route('races.show', $race->id) }}"
+                class="flex justify-center bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-full shadow-md transition-all duration-300 ease-in-out"
+                style="border: 2px solid #FFFFFF;">
+                Voltar
+            </a>
             <h1 class="text-center text-xl font-bold text-white">Inserir Resultados para Corrida: {{ $race->name }}</h1>
             <form action="{{ route('races.enterResults', ['raceId' => $race->id, 'vehicleId' => 0]) }}" method="POST" id="resultForm">
                 @csrf
@@ -66,7 +71,7 @@
                     <select name="car_condition" class="block mt-1 w-full rounded-md shadow-sm" style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" required>
                         <option value="excellent">Excelente</option>
                         <option value="good">Bom</option>
-                        <option value="average">Médio</option>
+                        <option value="fair">Médio</option>
                         <option value="poor">Ruim</option>
                     </select>
                 </div>
@@ -84,7 +89,6 @@
             const vehicleId = select.value;
             if (vehicleId) {
                 form.action = "{{ url('races/' . $race->id . '/enter-results') }}/" + vehicleId;
-                console.log(vehicleId)
             } else {
                 form.action = "{{ route('races.enterResults', ['raceId' => $race->id, 'vehicleId' => 0]) }}";
             }
