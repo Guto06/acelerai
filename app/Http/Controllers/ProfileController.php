@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Models\User;
 use App\Models\Vehicle;
+use Illuminate\Validation\Rule;
 
 
 class ProfileController extends Controller
@@ -21,6 +22,19 @@ class ProfileController extends Controller
     {
         return view('profile.edit', [
             'user' => $request->user(),
+        ]);
+    }
+
+    public function editUser($id)
+    {
+        $user = User::findOrFail($id);
+        $userLogado = Auth::user();
+
+        if (!$userLogado->is_administrator) {
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
+        return view('admin.edit-user', [
+            'user' => $user,
         ]);
     }
 
@@ -49,6 +63,46 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
+    public function updateUser(Request $request, $id): RedirectResponse
+    {
+        $user = User::findOrFail($id);
+
+        $userLogado = Auth::user();
+
+        if (!$userLogado->is_administrator) {
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'username' => [
+                'required',
+                'string',
+                'max:40',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'number' => 'required|string|max:11|unique:users,number,' . $user->id,
+            'age' => 'required|date|before:today',
+        ]);
+
+        $user->fill($request->all());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'Usuário atualizado com sucesso!');
+    }
+
     /**
      * Delete the user's account.
      */
@@ -61,6 +115,9 @@ class ProfileController extends Controller
         $user = $request->user();
 
         Auth::logout();
+
+
+        Vehicle::where('user_id', $user->id)->delete();
 
         $user->delete();
 
@@ -76,6 +133,9 @@ class ProfileController extends Controller
         if (Auth::user()->is_administrator) {
             $user = User::findOrFail($id); // Busca o usuário pelo ID
 
+
+            // Exclui os veículos associados ao usuário
+            Vehicle::where('user_id', $user->id)->delete();
             $user->delete(); // Exclui o usuário
 
             return back()->with('msg', 'Usuário excluído com sucesso.');

@@ -53,6 +53,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/season-ranking/{category}', [RaceController::class, 'categoryRanking'])->name('ranking.show');
     Route::get('/season-ranking', [RaceController::class, 'indexRanking'])->name('ranking.index');
     Route::get('/race-history', [RaceController::class, 'raceHistory'])->name('race-history');
+
+    Route::get('/admin', [DashboardController::class, 'indexAdmin'])->name('admin.index');
+    Route::get('/admin/users', [DashboardController::class, 'indexUsers'])->name('admin.users.index');
+    Route::get('/admin/users/edit/{id}', [ProfileController::class, 'editUser'])->name('admin.users.edit');
+    Route::patch('/admin/users/update/{id}', [ProfileController::class, 'updateUser'])->name('admin.users.update');
 });
 
 require __DIR__ . '/auth.php';

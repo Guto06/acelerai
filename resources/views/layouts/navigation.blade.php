@@ -15,7 +15,10 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex "> 
                     @if (Auth::user()->is_administrator)
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" > 
-                            {{ __('Usuários') }}
+                            {{ __('Validar') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.*')" > 
+                            {{ __('Administração') }}
                         </x-nav-link>
                     @else
                         <x-nav-link :href="route('dashboard.user')" :active="request()->routeIs('dashboard.user')" > 
