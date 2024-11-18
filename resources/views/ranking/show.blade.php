@@ -15,9 +15,9 @@
                         <tbody>
                             @foreach ($pilotPoints as $index => $pilot)
                                 <tr class="{{ $index === 0 ? 'bg-green-200' : '' }}">
-                                    <td class="border px-4 py-2">{{ $index + 1 }}</td>
-                                    <td class="border px-4 py-2">{{ $pilot['name'] }}</td>
-                                    <td class="border px-4 py-2">{{ $pilot['points'] }}</td>
+                                    <td class="border px-4 py-2 {{ $index > 0 ? 'text-white' : '' }}">{{ $index + 1 }}</td>
+                                    <td class="border px-4 py-2 {{ $index > 0 ? 'text-white' : '' }}">{{ $pilot['name'] }}</td>
+                                    <td class="border px-4 py-2 {{ $index > 0 ? 'text-white' : '' }}">{{ $pilot['points'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
