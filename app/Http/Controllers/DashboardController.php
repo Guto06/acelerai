@@ -14,7 +14,7 @@ class DashboardController extends Controller
     public function dashboardAdministrator()
     {
         $user = Auth::user();
-        if(!$user->is_administrator){
+        if (!$user->is_administrator) {
             return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
         // Busca apenas os usuários que não foram validados
@@ -22,20 +22,30 @@ class DashboardController extends Controller
         return view('dashboard', compact('users'));
     }
 
-    public function dashboardUser(){
+    public function dashboardUser()
+    {
         $user = Auth::user();
-        if($user->is_administrator){
+        if ($user->is_administrator) {
             return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
         $vehicles = Vehicle::where('user_id', $user->id)->get();
-        return view('userDashboard',['vehicles' => $vehicles]);
+        return view('userDashboard', ['vehicles' => $vehicles]);
+    }
+
+    public function indexAdmin()
+    {
+        $user = Auth::user();
+        if (!$user->is_administrator) {
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
+        return view('admin.index');
     }
 
     // Função para validar o usuário
     public function validateUser($id)
     {
         $user = Auth::user();
-        if(!$user->is_administrator){
+        if (!$user->is_administrator) {
             return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
         // Busca o usuário pelo ID
@@ -56,7 +66,7 @@ class DashboardController extends Controller
     public function documentUser($id)
     {
         $user = Auth::user();
-        if(!$user->is_administrator){
+        if (!$user->is_administrator) {
             return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
         // Busca o usuário pelo ID
@@ -77,5 +87,15 @@ class DashboardController extends Controller
 
         // Retorna o PDF para ser exibido no navegador
         return response()->file($filePath);
+    }
+
+    public function indexUsers()
+    {
+        $user = Auth::user();
+        if (!$user->is_administrator) {
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
+        $pilots = User::all();
+        return view('admin.user', compact('pilots'));
     }
 }
