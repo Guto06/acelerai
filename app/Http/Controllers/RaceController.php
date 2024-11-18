@@ -372,4 +372,44 @@ class RaceController extends Controller
     {
         return view('ranking.index');
     }
+
+    public function raceHistory(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user->is_administrator) {
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
+
+        // Filtros de data e categoria
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $category = $request->input('category');
+
+        // Consulta para obter o histórico de corridas do piloto
+        $query = RaceVehicle::whereHas('vehicle', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->with('race', 'vehicle');
+
+        // Aplicar filtros
+        if ($startDate) {
+            $query->whereHas('race', function ($query) use ($startDate) {
+                $query->where('date_time', '>=', $startDate);
+            });
+        }
+        if ($endDate) {
+            $query->whereHas('race', function ($query) use ($endDate) {
+                $query->where('date_time', '<=', $endDate);
+            });
+        }
+        if ($category) {
+            $query->whereHas('vehicle', function ($query) use ($category) {
+                $query->where('category', $category);
+            });
+        }
+
+        $raceHistory = $query->orderBy('race_id', 'desc')->get();
+
+        return view('races.history', compact('raceHistory', 'startDate', 'endDate', 'category'));
+    }
 }

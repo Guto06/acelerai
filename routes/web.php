@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/races/{race}/performance-summary/{user}', [RaceController::class, 'performanceSummary']);
     Route::get('/season-ranking/{category}', [RaceController::class, 'categoryRanking'])->name('ranking.show');
     Route::get('/season-ranking', [RaceController::class, 'indexRanking'])->name('ranking.index');
+    Route::get('/race-history', [RaceController::class, 'raceHistory'])->name('race-history');
 });
 
 require __DIR__ . '/auth.php';

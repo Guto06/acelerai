@@ -21,6 +21,9 @@
                         <x-nav-link :href="route('dashboard.user')" :active="request()->routeIs('dashboard.user')" > 
                             {{ __('Veículos') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('race-history')" :active="request()->routeIs('race-history')" > 
+                            {{ __('Histórico') }}
+                        </x-nav-link>
                     @endif
                     <x-nav-link :href="route('races.index')" :active="request()->routeIs('races.*')"> 
                         {{ __('Corridas') }}
