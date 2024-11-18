@@ -1,11 +1,11 @@
 <x-app-layout>
     <div class="container mx-auto py-20 w-auto h-auto">
-        <div class="bg-gray-800 p-10 rounded-lg shadow-xl max-w-4xl mx-auto" style="border: 3px solid #FF9800;">
+        <div class="bg-[#0a161c] p-10 rounded-lg shadow-xl max-w-4xl mx-auto" style="border: 3px solid #FF9800;">
             <div class="mt-2">
-                <div class="text-center mb-8">
+                <div class="text-center mb-8 ">
                     <h1 class="text-3xl font-bold mb-4" style="color: #FF9800;">Classificação Geral da Temporada - Categoria {{ $category }}</h1>
-                    <table class="min-w-full bg-white mb-8">
-                        <thead>
+                    <table class="min-w-full bg-[#0a161c] mb-8 rounded-lg" style="border: 3px solid #FF9800;">
+                        <thead  style="color: #ffff">
                             <tr>
                                 <th class="py-2">Posição</th>
                                 <th class="py-2">Piloto</th>
@@ -23,10 +23,10 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="text-center mb-8">
-                    <h2 class="text-2xl font-bold mb-4" style="color: #FF9800;">Pilotos Cadastrados na Categoria {{ $category }}</h2>
-                    <table class="min-w-full bg-white mb-8">
-                        <thead>
+                <div class="text-center mb-8  " >
+                    <h2 class="text-3xl font-bold mb-4 " style="color: #FF9800;">Pilotos Cadastrados na Categoria {{ $category }}</h2>
+                    <table class="min-w-full bg-[#0a161c] mb-8 " style="border: 3px solid #FF9800">
+                        <thead  style="color: #ffff">
                             <tr>
                                 <th class="py-2">Piloto</th>
                                 <th class="py-2">Veículo</th>
@@ -35,7 +35,7 @@
                         </thead>
                         <tbody>
                             @foreach ($pilots as $pilot)
-                                <tr>
+                                <tr  style="color: #ffff">
                                     <td class="border px-4 py-2">{{ $pilot->name }}</td>
                                     <td class="border px-4 py-2">
                                         @foreach ($pilot->vehicles->where('category', $category) as $vehicle)
