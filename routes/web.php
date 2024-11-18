@@ -56,6 +56,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/admin', [DashboardController::class, 'indexAdmin'])->name('admin.index');
     Route::get('/admin/users', [DashboardController::class, 'indexUsers'])->name('admin.users.index');
+    Route::get('/admin/users/edit/{id}', [ProfileController::class, 'editUser'])->name('admin.users.edit');
+    Route::patch('/admin/users/update/{id}', [ProfileController::class, 'updateUser'])->name('admin.users.update');
 });
 
 require __DIR__ . '/auth.php';
