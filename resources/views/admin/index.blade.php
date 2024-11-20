@@ -9,7 +9,7 @@
                 <a href="{{ route('admin.vehicles') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-6 rounded-lg shadow-md transition-all duration-300 ease-in-out text-center">
                     Gerenciar Veículos
                 </a>
-                <a href="{{ route('race-history') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-6 rounded-lg shadow-md transition-all duration-300 ease-in-out text-center">
+                <a href="{{ route('admin.race') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-6 rounded-lg shadow-md transition-all duration-300 ease-in-out text-center">
                     Gerenciar Corridas
                 </a>
                 <a href="{{ route('race-history') }}" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-6 rounded-lg shadow-md transition-all duration-300 ease-in-out text-center">

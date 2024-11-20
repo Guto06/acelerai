@@ -28,6 +28,27 @@ class RaceController extends Controller
         return view('races.index', compact('upcomingRaces', 'pastRaces'));
     }
 
+    public function indexAdmin()
+    {
+        $user = Auth::user();
+        if (!$user->is_administrator) {
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
+        $currentDate = now(); // Data atual
+
+        // Recupera as corridas futuras
+        $upcomingRaces = Race::where('date_time', '>=', $currentDate)
+            ->orderBy('date_time', 'asc') // Ordena pela data e hora corretas
+            ->get();
+
+        // Recupera as corridas passadas
+        $pastRaces = Race::where('date_time', '<', $currentDate)
+            ->orderBy('date_time', 'desc') // Ordena pela data e hora corretas
+            ->get();
+
+        return view('admin.race', compact('upcomingRaces', 'pastRaces'));
+    }
+
 
     // Exibir o formulário para criar uma nova corrida
     public function create()
@@ -71,7 +92,7 @@ class RaceController extends Controller
         ]);
 
         // Redireciona para a lista de corridas com mensagem de sucesso
-        return redirect()->route('races.index')->with('success', 'Corrida criada com sucesso!');
+        return redirect()->route('races.index')->with('msg', 'Corrida criada com sucesso!');
     }
 
     // Exibir uma corrida específica
@@ -114,7 +135,7 @@ class RaceController extends Controller
         ]);
 
         $race->update($request->all()); // Atualiza a corrida com os dados recebidos
-        return redirect('/races')->with('msg', 'Corrida atualizada com sucesso!');;
+        return redirect('/admin/races')->with('msg', 'Corrida atualizada com sucesso!');;
     }
 
     // Remover uma corrida do banco de dados
@@ -124,7 +145,7 @@ class RaceController extends Controller
         abort_if(!$user->is_administrator, 403, 'Você não tem permissão para acessar essa página');
 
         $race->delete(); // Exclui a corrida
-        return redirect()->route('races.index')->with('success', 'Corrida excluída com sucesso!'); // Redireciona para a lista de corridas
+        return redirect()->route('admin.race')->with('msg', 'Corrida excluída com sucesso!'); // Redireciona para a lista de corridas
     }
 
     public function participate(Request $request, $raceId)
@@ -159,7 +180,7 @@ class RaceController extends Controller
         // Adiciona o veículo do usuário à corrida
         $race->vehicles()->attach($request->vehicle_id);
 
-        return redirect()->back()->with('success', 'Você foi adicionado à corrida com sucesso.');
+        return redirect()->back()->with('msg', 'Você foi adicionado à corrida com sucesso.');
     }
 
     public function getEligibleVehicles($raceId)
@@ -411,5 +432,80 @@ class RaceController extends Controller
         $raceHistory = $query->orderBy('race_id', 'desc')->get();
 
         return view('races.history', compact('raceHistory', 'startDate', 'endDate', 'category'));
+    }
+
+    public function listRaceVehicles($raceId)
+    {
+        $user = Auth::user();
+
+        if (!$user->is_administrator) {
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
+        $race = Race::with('vehicles.user')->findOrFail($raceId);
+        $raceVehicles = RaceVehicle::where('race_id', $raceId)->with('vehicle.user')->get();
+        return view('admin.race-vehicles', compact('race', 'raceVehicles'));
+    }
+
+    public function editRaceVehicle($raceId, $vehicleId)
+    {
+        $user = Auth::user();
+
+        if (!$user->is_administrator) {
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
+        $raceVehicle = RaceVehicle::where('race_id', $raceId)->where('vehicle_id', $vehicleId)->firstOrFail();
+        return view('admin.edit-race-vehicles', compact('raceVehicle'));
+    }
+
+    public function updateRaceVehicle(Request $request, $raceId, $vehicleId)
+    {
+        $user = Auth::user();
+
+        if (!$user->is_administrator) {
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
+        $validated = $request->validate([
+            'position' => 'required|integer|between:1,10',
+            'time' => 'required|date_format:H:i:s',
+            'fuel_consumption' => 'required|numeric',
+            'average_speed' => 'required|numeric',
+            'car_condition' => 'required|in:excellent,good,fair,poor',
+        ]);
+
+        $raceVehicle = RaceVehicle::where('race_id', $raceId)->where('vehicle_id', $vehicleId)->firstOrFail();
+        
+        // Calcula a pontuação usando a nova função
+        $points = $this->calculatePoints(
+            $validated['time'],
+            $validated['fuel_consumption'],
+            $validated['average_speed'],
+            $validated['car_condition'],
+            $validated['position']
+        );
+
+        // Atualiza o registro com os resultados e a pontuação
+        $raceVehicle->update([
+            'position' => $validated['position'],
+            'time' => $validated['time'],
+            'fuel_consumption' => $validated['fuel_consumption'],
+            'average_speed' => $validated['average_speed'],
+            'car_condition' => $validated['car_condition'],
+            'points' => $points,
+        ]);
+
+        return redirect()->route('admin.race-vehicles', $raceId)->with('msg', 'Informações do piloto atualizadas com sucesso!');
+    }
+
+    public function deleteRaceVehicle($raceId, $vehicleId)
+    {
+        $user = Auth::user();
+
+        if (!$user->is_administrator) {
+            return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
+        }
+        $raceVehicle = RaceVehicle::where('race_id', $raceId)->where('vehicle_id', $vehicleId)->firstOrFail();
+        $raceVehicle->delete();
+
+        return redirect()->route('admin.race-vehicles', $raceId)->with('msg', 'Piloto removido da corrida com sucesso!');
     }
 }
