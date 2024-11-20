@@ -74,12 +74,12 @@
                                     Inserir Resultados
                                 </a>
                             @endif
-                            <a href="{{ route('races.edit', $race->id) }}"
+                            <a href="{{ route('admin.edit-race', $race->id) }}"
                                 class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-full shadow-md transition-all duration-300 ease-in-out"
                                 style="border: 2px solid #FFFFFF;">
                                 Editar
                             </a>
-                            <form action="{{ route('races.destroy', $race->id) }}" method="POST"
+                            <form action="{{ route('admin.edit-race.destroy', $race->id) }}" method="POST"
                                 style="display:inline;">
                                 @csrf
                                 @method('DELETE')

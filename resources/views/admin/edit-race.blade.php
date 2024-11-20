@@ -27,9 +27,9 @@
     <div class="flex items-center justify-center min-h-screen mt-12">
         <div class="w-full max-w-md p-6 space-y-6 bg-gray-900 rounded-lg shadow-lg" style="border: 2px solid #FF9800;">
             <h1 class="text-center text-xl font-bold text-white">Editar a corrida: {{ $race->name }}</h1>
-            <form action="{{ route('races.update', $race->id) }}" method="POST">
+            <form action="{{ route('admin.edit-race.update', $race->id) }}" method="POST">
                 @csrf
-                @method('PUT')
+                @method('PATCH')
                 <div>
                     <x-input-label for="name" :value="__('Nome')" style="color: #FF9800;" />
                     <x-text-input id="name" class="block mt-1 w-full rounded-md shadow-sm" type="text" name="name" value='{{ $race->name }}' required autofocus style="border: 2px solid #FF9800; background-color: #2d3748; color: white;" />

@@ -114,7 +114,7 @@ class RaceController extends Controller
         if (!$user->is_administrator) {
             return redirect('/')->with('msg', 'Você não tem permissão para acessar essa página');
         }
-        return view('races.edit', compact('race')); // Passa a corrida para a view de edição
+        return view('admin.edit-race', compact('race')); // Passa a corrida para a view de edição
     }
 
     // Atualizar uma corrida existente no banco de dados

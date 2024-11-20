@@ -44,7 +44,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/veiculos/edit/{id}', [VehicleController::class, 'edit']);
     Route::get('/dashboard/user', [DashboardController::class, 'dashboardUser'])->name('dashboard.user');
 
-    Route::resource('races', RaceController::class);
+    Route::get('/races', [RaceController::class, 'index'])->name('races.index');
+    Route::get('/races/create', [RaceController::class, 'create'])->name('races.create');
+    Route::post('/races/create', [RaceController::class, 'store'])->name('races.store');
+    Route::get('/races/{race}', [RaceController::class, 'show'])->name('races.show');
     Route::post('/races/{race}/participate', [RaceController::class, 'participate'])->name('races.participate');
     Route::get('/races/{race}/eligible-vehicles', [RaceController::class, 'getEligibleVehicles'])->name('races.eligible-vehicles');
     Route::get('/races/{raceId}/enter-results', [RaceController::class, 'showEnterResultsForm'])->name('races.enterResultsForm');
@@ -58,7 +61,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/users', [DashboardController::class, 'indexUsers'])->name('admin.users.index');
     Route::get('/admin/users/edit/{id}', [ProfileController::class, 'editUser'])->name('admin.users.edit');
     Route::patch('/admin/users/update/{id}', [ProfileController::class, 'updateUser'])->name('admin.users.update');
-    
     Route::get('/admin/vehicles', [VehicleController::class, 'listAllVehicles'])->name('admin.vehicles');
     Route::get('/admin/vehicles/edit/{id}', [VehicleController::class, 'editVehicle'])->name('admin.vehicles.edit');
     Route::patch('/admin/vehicles/update/{id}', [VehicleController::class, 'updateVehicle'])->name('admin.vehicles.update');
@@ -66,6 +68,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/admin/races', [RaceController::class, 'indexAdmin'])->name('admin.race');
     Route::get('/admin/races/edit/{race}', [RaceController::class, 'edit'])->name('admin.edit-race');
+    Route::patch('/admin/races/update/{race}', [RaceController::class, 'update'])->name('admin.edit-race.update');
+    Route::delete('/admin/races/delete/{race}', [RaceController::class, 'destroy'])->name('admin.edit-race.destroy');
     Route::get('/admin/races/{race}/vehicles', [RaceController::class, 'listRaceVehicles'])->name('admin.race-vehicles');
     Route::get('/admin/races/{race}/vehicles/{vehicle}/edit', [RaceController::class, 'editRaceVehicle'])->name('admin.race-vehicles.edit');
     Route::patch('/admin/races/{race}/vehicles/{vehicle}/update', [RaceController::class, 'updateRaceVehicle'])->name('admin.race-vehicles.update');

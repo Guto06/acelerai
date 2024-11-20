@@ -62,7 +62,7 @@
                                                 class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
                                                 Editar
                                             </a>
-                                            <form action="{{ route('races.destroy', $race->id) }}" method="POST"
+                                            <form action="{{ route('admin.edit-race.destroy', $race->id) }}" method="POST"
                                                 style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
@@ -130,11 +130,11 @@
                                         <div id="map-{{ $race->id }}" class="w-full h-48 mt-4 rounded-lg"></div>
                                         <!-- Botões redondos e espaçados -->
                                         <div class="flex justify-center space-x-4 mt-4">
-                                            <a href="{{ route('races.edit', $race->id) }}"
+                                            <a href="{{ route('admin.edit-race', $race->id) }}"
                                                 class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
                                                 Editar
                                             </a>
-                                            <form action="{{ route('races.destroy', $race->id) }}" method="POST"
+                                            <form action="{{ route('admin.edit-race.destroy', $race->id) }}" method="POST"
                                                 style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
