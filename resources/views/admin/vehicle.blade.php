@@ -29,16 +29,16 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             @if (count($users) > 0)
                 @foreach ($users as $user)
-                    <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg mb-6">
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-xl max-w-7xl mx-auto" style="border: 3px solid #FF9800;">
                         <h3 class="text-2xl font-bold mb-4" style="color: #FF9800;">{{ $user->name }}
                             ({{ $user->username }})
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             @foreach ($user->vehicles as $vehicle)
-                                <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
+                                <div class="bg-gray-700 p-4 rounded-lg shadow-lg">
                                     <h4 class="text-lg font-bold mb-2" style="color: #FF9800;">{{ $vehicle->model }}
                                     </h4>
-                                    <p class="text-gray-300"><strong>Marca:</strong> {{ $vehicle->brand }}</p>
+                                    <p class="text-gray-300"><strong>Fabricante:</strong> {{ $vehicle->brand }}</p>
                                     <p class="text-gray-300"><strong>Ano:</strong> {{ $vehicle->year }}</p>
                                     <p class="text-gray-300"><strong>Potência:</strong> {{ $vehicle->power }} cv</p>
                                     <div class="mt-4 flex justify-between">
