@@ -1,0 +1,182 @@
+<x-app-layout>
+
+    <head>
+        <!-- Adicionar o CSS do Leaflet -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+        <!-- Adicionar o Leaflet Routing Machine -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+        <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    </head>
+
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl leading-tight shadow-white mt-6" style="color: #FF9800;">
+            {{ __('Corridas Registradas') }}
+        </h2>
+    </x-slot>
+
+    <div class="container-fluid">
+        <div class="row">
+            @if (session('msg'))
+                <div class="w-full max-w-lg mx-auto">
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative shadow-md animate-fade-in"
+                        role="alert">
+                        <span class="block sm:inline">{{ session('msg') }}</span>
+                        <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                            <svg class="fill-current h-6 w-6 text-green-500" role="button"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                onclick="this.parentElement.parentElement.classList.add('hidden')">
+                                <title>Fechar</title>
+                                <path
+                                    d="M14.348 14.849a1 1 0 01-1.414 0L10 11.914l-2.935 2.935a1 1 0 01-1.414-1.414L8.586 10 5.651 7.065a1 1 0 111.414-1.414L10 8.586l2.935-2.935a1 1 0 111.414 1.414L11.414 10l2.935 2.935a1 1 0 010 1.414z" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            @endif
+        </div>
+
+        <div class="">
+            <!-- Exibição de Próximas Corridas -->
+            <div class="container-fluid py-8">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div class="bg-[#0a161c] overflow-hidden shadow-sm sm:rounded-lg"
+                        style="border: 5px solid #FF9800;">
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold mb-4" style="color: #FF9800;">Próximas Corridas</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                @forelse($upcomingRaces as $race)
+                                    <div class="bg-[#0a161c] border-2 border-orange-500 rounded-lg p-4 shadow-lg">
+                                        <h1 class="text-center text-lg font-bold mb-4" style="color: #FF9800;">Corrida:
+                                            {{ $race->name }}</h1>
+                                        <p style="color: #FF9800;"><strong>Categoria:</strong> {{ $race->category }}</p>
+                                        <p style="color: #FF9800;"><strong>Número Máximo de Veículos:</strong>
+                                            {{ $race->max_vehicles }}</p>
+                                        <p style="color: #FF9800;"><strong>Data:</strong>
+                                            {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $race->date_time)->format('d/m/Y - H:i') }}
+                                        </p>
+                                        <div id="map-{{ $race->id }}" class="w-full h-48 mt-4 rounded-lg"></div>
+                                        <!-- Botões redondos e espaçados -->
+                                        <div class="flex justify-center space-x-4 mt-4">
+                                            <a href="{{ route('admin.edit-race', $race->id) }}"
+                                                class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
+                                                Editar
+                                            </a>
+                                            <form action="{{ route('admin.edit-race.destroy', $race->id) }}" method="POST"
+                                                style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
+                                                    Excluir
+                                                </button>
+                                            </form>
+                                            <a href="{{ route('races.show', $race->id) }}"
+                                                class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
+                                                Saiba mais
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        var map{{ $race->id }} = L.map('map-{{ $race->id }}').setView([-23.5505, -46.6333], 13);
+                                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                            maxZoom: 19,
+                                            attribution: '© OpenStreetMap'
+                                        }).addTo(map{{ $race->id }});
+                                        L.Routing.control({
+                                            waypoints: [
+                                                L.latLng({{ $race->start_latitude }}, {{ $race->start_longitude }}),
+                                                L.latLng({{ $race->end_latitude }}, {{ $race->end_longitude }})
+                                            ],
+                                            draggableWaypoints: false, // Desabilita a movimentação dos waypoints
+                                            lineOptions: {
+                                                styles: [{
+                                                    color: 'blue',
+                                                    opacity: 1,
+                                                    weight: 5
+                                                }]
+                                            }
+                                        }).addTo(map{{ $race->id }});
+                                    </script>
+                                @empty
+                                    <p style="color: #FF9800;">Nenhuma corrida futura disponível.</p>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exibição de Corridas Passadas -->
+            <div class="container-fluid py-8">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div class="bg-[#0a161c] overflow-hidden shadow-sm sm:rounded-lg"
+                        style="border: 5px solid #FF9800;">
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold mb-4" style="color: #FF9800;">Corridas Anteriores</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                @forelse($pastRaces as $race)
+                                    <div class="bg-[#0a161c] border-2 border-orange-500 rounded-lg p-4 shadow-lg">
+                                        <h1 class="text-center text-lg font-bold mb-4" style="color: #FF9800;">Corrida:
+                                            {{ $race->name }}</h1>
+                                        <p style="color: #FF9800;"><strong>Categoria:</strong> {{ $race->category }}
+                                        </p>
+                                        <p style="color: #FF9800;"><strong>Número Máximo de Veículos:</strong>
+                                            {{ $race->max_vehicles }}</p>
+                                        <p style="color: #FF9800;"><strong>Data:</strong>
+                                            {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $race->date_time)->format('d/m/Y - H:i') }}
+                                        </p>
+                                        <!-- Adicione mais informações sobre a corrida aqui -->
+                                        <div id="map-{{ $race->id }}" class="w-full h-48 mt-4 rounded-lg"></div>
+                                        <!-- Botões redondos e espaçados -->
+                                        <div class="flex justify-center space-x-4 mt-4">
+                                            <a href="{{ route('admin.edit-race', $race->id) }}"
+                                                class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
+                                                Editar
+                                            </a>
+                                            <form action="{{ route('admin.edit-race.destroy', $race->id) }}" method="POST"
+                                                style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
+                                                    Excluir
+                                                </button>
+                                            </form>
+                                            <a href="{{ route('admin.race-vehicles', $race->id) }}"
+                                                class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition-all duration-300 ease-in-out">
+                                                Resultado
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        var map{{ $race->id }} = L.map('map-{{ $race->id }}').setView([-23.5505, -46.6333], 13);
+                                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                            maxZoom: 19,
+                                            attribution: '© OpenStreetMap'
+                                        }).addTo(map{{ $race->id }});
+                                        L.Routing.control({
+                                            waypoints: [
+                                                L.latLng({{ $race->start_latitude }}, {{ $race->start_longitude }}),
+                                                L.latLng({{ $race->end_latitude }}, {{ $race->end_longitude }})
+                                            ],
+                                            draggableWaypoints: false, // Desabilita a movimentação dos waypoints
+                                            lineOptions: {
+                                                styles: [{
+                                                    color: 'red',
+                                                    opacity: 1,
+                                                    weight: 5
+                                                }]
+                                            }
+                                        }).addTo(map{{ $race->id }});
+                                    </script>
+                                @empty
+                                    <p style="color: #FF9800;">Nenhuma corrida passada disponível.</p>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</x-app-layout>
